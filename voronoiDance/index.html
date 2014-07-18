@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <style type="text/css">
+      #myCanvas{
+        width: 640px;
+        height: 480px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id='container'>
+    <video muted autoplay></video>
+    <canvas id="myCanvas" width="640px" height="480px"></canvas>
+    <canvas id="triangleTest"></canvas>
+  </body>
+  <script type="text/javascript" src="camera.js"></script>
+  <script type="text/javascript" src="http://paperjs.org/assets/js/rhill-voronoi-core.js"></script>
+  <script type="text/javascript" src="sketch.js"></script>
+  <script type="text/javascript" src="delaunay.js"></script>
+  <script type="text/javascript">
+var canvas = document.getElementById("triangleTest"),
+          context = canvas.getContext("2d"),
+          vertices = new Array(512),
+          i, x, y;
+
+      for(i = vertices.length; i--; ) {
+        do {
+          x = Math.random() - 0.5;
+          y = Math.random() - 0.5;
+        } while(x * x + y * y > 0.25);
+
+        x = (x * 0.96875 + 0.5) * canvas.width;
+        y = (y * 0.96875 + 0.5) * canvas.height;
+
+        vertices[i] = [x, y];
+      }
+
+      console.time("triangulate");
+      var triangles = Delaunay.triangulate(vertices);
+      console.timeEnd("triangulate");
+
+
+      for(i = triangles.length; i>=3; i-=3 ) {
+        var r = Math.floor(Math.random()*255);
+        var g = Math.floor(Math.random()*255);
+        var b = Math.floor(Math.random()*255);
+        context.fillStyle = "rgb(" + r.toString() + ","+ g.toString() + "," + b.toString() +")";
+        context.beginPath();
+        context.moveTo(vertices[triangles[i-1]][0], vertices[triangles[i-1]][1]);
+        context.lineTo(vertices[triangles[i-2]][0], vertices[triangles[i-2]][1]);
+        context.lineTo(vertices[triangles[i-3]][0], vertices[triangles[i-3]][1]);
+        context.closePath();
+        context.stroke();
+        context.fill();
+
+      }
+
+      // for(i = triangles.length; i>3; i-- ) {
+      //   context.moveTo(vertices[triangles[i-1]][0], vertices[triangles[i-1]][1]);
+      //   context.lineTo(vertices[triangles[i-2]][0], vertices[triangles[i-2]][1]);
+      //   context.lineTo(vertices[triangles[i-3]][0], vertices[triangles[i-3]][1]);
+      // }
+// var count = 0;
+//       for(i = triangles.length; i; ) {
+//         ctx.beginPath();
+//         --i; ctx.moveTo(vertices[triangles[i]][0], vertices[triangles[i]][1]);
+//         --i; ctx.lineTo(vertices[triangles[i]][0], vertices[triangles[i]][1]);
+//         --i; ctx.lineTo(vertices[triangles[i]][0], vertices[triangles[i]][1]);
+//         ctx.closePath();
+//         ctx.stroke();
+//         count ++;
+//       }
+//       console.log(count, triangles.length)
+  </script>
+</html>

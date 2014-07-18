@@ -6,7 +6,7 @@ function setup() {
   createCanvas(720, 720);
   colorMode(HSB);
 
-  resolution = 4;
+  resolution = 8;
   cols = (width/resolution);
   rows = (height/resolution);
 
@@ -40,6 +40,17 @@ function draw() {
 	v.applyBehaviors();
 	v.run();
   });
+
+var count = 0;
+  for(var i = 0; i< vehicles.length; i++){
+  	for(var j = i+1; j< vehicles.length; j++){
+  		// count ++
+  		// console.log(count)
+  		if(vehicles[i].loc === vehicles[j].loc){
+  			console.log("coincidence")
+  		}
+  	}
+  }
 }
 
 //-----------------------------------------------------------------------------------------

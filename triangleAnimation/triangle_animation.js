@@ -53,8 +53,9 @@
   DelaunayAnimation.prototype.draw = function () {
 
     this.frame++;
-
-    //console.log(this);
+    if (this.frame < 3) {
+      console.log(this);
+    }
 
     //if (this.frame % 60 === 0) {
 

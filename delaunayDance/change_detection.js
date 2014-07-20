@@ -82,18 +82,19 @@
 										points.splice(k, 1);
 										vertices.splice(k, 1);
 								} else {
-										points[k].render();
+										//points[k].render();
 								}
 						}
 						triangles = Delaunay.triangulate(vertices);
 
+						//ctx.globalCompositeOperation = 'lighten';
 						for (var l = triangles.length; l >= 3; l -= 3) {
-								var r = Math.floor(Math.random() * 255);
-								var g = Math.floor(Math.random() * 255);
-								var b = Math.floor(Math.random() * 255);
+								var hue = Math.floor(Math.random() * 360);
+								var saturation = '100%';
+								var lightness = Math.floor(Math.random() * 50 + 50);
 								var al = Math.random();
-								ctx.fillStyle = "rgba(" + r.toString() + "," + g.toString() + "," +
-										b.toString() + "," + al.toString() + ")";
+								ctx.fillStyle = "hsla(" + hue.toString() + "," + saturation + "," +
+										lightness.toString() + "%" + "," + al.toString() + ")";
 								ctx.strokeStyle = ctx.fillStyle;
 								ctx.beginPath();
 								ctx.moveTo(vertices[triangles[l - 1]][0], vertices[triangles[l - 1]][

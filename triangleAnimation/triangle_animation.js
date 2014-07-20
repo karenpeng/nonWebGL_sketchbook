@@ -54,7 +54,7 @@
 
     this.frame++;
     if (this.frame < 3) {
-      console.log(this);
+      //console.log(this);
     }
 
     //if (this.frame % 60 === 0) {
@@ -62,7 +62,6 @@
     for (var j = 0; j < this.vertices.length; j++) {
       // vertices[j][0] = vertices[j][0] += Math.cos(theta);
       // vertices[j][1] = vertices[j][1] += Math.sin(theta);
-      console.log("change");
       this.vertices[j][0] = this.vertices[j][0] += (Math.random() * 4 - 2);
       this.vertices[j][1] = this.vertices[j][1] += (Math.random() * 4 - 2);
     }

@@ -1,21 +1,16 @@
-//var canvas = document.getElementById("triangleTest");
+  var canvas = document.getElementById("triangleTest");
+  var d = new DelaunayAnimation(canvas);
 
-//var d = new DelaunayAnimation(canvas);
-//d.init();
-//d.draw();
+  function setup() {
+    d.init();
+  }
 
-// var main = function(animation){
-// 	this.animation = animation;
-// }
+  function update(callback) {
+    requestAnimationFrame(function () {
+      update(callback);
+    });
+    callback();
+  }
 
-// main.prototype.setup = function(){
-// 	this.animation.init();
-// } 
-// main.prototype.update = function(){
-// 	requestAnimationFrame(main.prototype.update);
-// 	this.animation.draw();
-// }
-
-// var mainMain = new main(d);
-// mainMain.setup();
-// mainMain.update(); 
+  setup();
+  update(d.draw);

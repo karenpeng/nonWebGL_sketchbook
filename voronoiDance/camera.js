@@ -5,7 +5,7 @@
  * A bunch of this was copied from here:
  * http://www.html5rocks.com/en/tutorials/getusermedia/intro/
  */
-var video, canvas, ctx;
+
 var WEBCAM = {
 		init: function () {
 				"use strict";
@@ -25,14 +25,10 @@ var WEBCAM = {
 				}
 
 				var self = this,
-						captureTimer;
-				video = document.querySelector('video');
-				canvas = document.getElementById('myCanvas');
-				ctx = canvas.getContext('2d');
+						captureTimer,
+						video = document.querySelector('video');
 
 				self.video = video;
-				self.canvas = canvas;
-				self.ctx = canvas.getContext('2d');
 
 				// Not showing vendor prefixes or code that works cross-browser.
 				if (navigator.getUserMedia) {

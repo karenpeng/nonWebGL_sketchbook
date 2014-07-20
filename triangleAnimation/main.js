@@ -1,5 +1,6 @@
   var canvas = document.getElementById("triangleTest");
-
+  var main = new Main(DelaunayAnimation);
+  /*
   //first attempt
   var d = new DelaunayAnimation(canvas);
 
@@ -17,27 +18,46 @@
 
   setup();
   update(d.draw);
+*/
 
-  /*
   //second attempt
+  $("#animationType").change(function () {
+    console.log("change")
+    var value = $(this).val();
+    if (value === "amb") {
+      main = null;
+      main = new Main(DelaunayAnimation);
+    } else if (value === "lig") {
+      main = null;
+      main = new Main(DelaunayLight);
+    } else if (value === "mou") {
+      main = null;
+      main = new Main(something);
+    }
+  });
 
   function Main(type) {
-    this.main = new type(canvas);
+    this.animation = new type(canvas);
     console.log(this.main);
   }
   Main.prototype.init = function () {
-    this.main.init();
-  }
+    this.animation.init();
+  };
 
   Main.prototype.update = function () {
+    var that = this;
     requestAnimationFrame(function () {
-      this.update();
+      that.update();
     });
-    this.main.draw();
-    console.log(this);
-  }
+    this.animation.draw();
+    //console.log(this);
+  };
 
-  var main = new Main(DelaunayAnimation);
   main.init();
   main.update();
-  */
+
+  canvas.onmousemove = function (e) {
+    if (main.animation.mouseEvent !== undefined) {
+      main.animation.mouseEvent(e.pageX, e.pageY);
+    }
+  };

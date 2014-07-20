@@ -13,17 +13,18 @@
   <body>
     <div id='container'>
     <video muted autoplay></video>
-    <select>
-      <option value="del">delaunay animation</option>
-      <option value="delL">delaunay light</option>
-      <option value="vor">voronoi hover</option>
+    <select id="animationType">
+      <option value="del">triangle ambient</option>
+      <option value="delL">triangle light</option>
+      <option value="vor">triangle mouse</option>
     </select>
     <canvas id="triangleTest" width="1280px" height="720px"></canvas>
   </body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <!--<script type="text/javascript" src="http://paperjs.org/assets/js/rhill-voronoi-core.js"></script>-->
   <script type="text/javascript" src="delaunay.js"></script>
   <script type="text/javascript" src="triangle_animation.js"></script>
-  <!--<script type="text/javascript" src="triangle_light.js"></script>-->
-  <!-- <script type="text/javascript" src="voronoi_animation.js"></script>-->
+  <script type="text/javascript" src="triangle_light.js"></script>
+  <script type="text/javascript" src="triangle_mouse.js"></script>
   <script type="text/javascript" src="main.js"></script>
 </html>

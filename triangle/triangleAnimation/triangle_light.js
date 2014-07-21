@@ -103,11 +103,11 @@ function map(para, orMin, orMax, tarMin, tarMax) {
 
   MyTriangle.prototype.render = function (triNum) {
     if(!this.close){
-    this.context.fillStyle = 'rgb(' + this.red.toString() + ',' + Math.floor(
-      255-this.sum *4 ) + ',' + Math.floor( 255-this.sum*3 ) + ')';
+    this.context.fillStyle = 'rgb('+ Math.floor(this.red)+  ',' + Math.floor(
+      255-this.sum *6 ) + ',' + Math.floor( 255-this.sum*3 ) + ')';
     }else{
-      this.context.fillStyle = 'rgb(' + this.red.toString() + ',' + Math.floor(
-      255-this.sum *4 +this.lighten) + ',' + Math.floor( 255-this.sum*3 +this.lighten) + ')';
+      this.context.fillStyle = 'rgb('+ Math.floor(this.red+this.lighten)+ ','+ Math.floor(
+      255-this.sum *6 +this.lighten) + ',' + Math.floor( 255-this.sum*3 +this.lighten) + ')';
     }
     this.context.strokeStyle = this.context.fillStyle;
     this.context.beginPath();

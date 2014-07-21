@@ -21,6 +21,7 @@
   update(d.draw);
 */
 function drawBackground(){
+  context.fillStyle = "black";
   context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -40,9 +41,9 @@ function changeType(type){
     } else if (value === "DelaunayLight") {
       drawBackground();
       changeType(DelaunayLight);
-    } else if (value === "DelaunayMouse") {
+    } else if (value === "DelaunayAvoid") {
       drawBackground();
-      changeType(DelaunayMouse);
+      changeType(DelaunayAvoid);
     }
   });
 
@@ -64,6 +65,7 @@ function changeType(type){
         that.update();
       }
     });
+    drawBackground();
     this.animation.draw();
     //console.log(this);
   };
@@ -76,7 +78,19 @@ function changeType(type){
   main.update();
 
   canvas.onmousemove = function (e) {
-    if (main.animation.mouseEvent !== undefined) {
-      main.animation.mouseEvent(e.pageX, e.pageY);
+    if (main.animation.mouseMoveEvent !== undefined) {
+      main.animation.mouseMoveEvent(e.pageX, e.pageY);
+    }
+  };
+
+  canvas.onmousedown = function (e) {
+    if (main.animation.mouseDownEvent !== undefined) {
+      main.animation.mouseDownEvent(e.pageX, e.pageY);
+    }
+  };
+
+  canvas.onmouseup = function (e) {
+    if (main.animation.mouseUpEvent !== undefined) {
+      main.animation.mouseUpEvent(e.pageX, e.pageY);
     }
   };

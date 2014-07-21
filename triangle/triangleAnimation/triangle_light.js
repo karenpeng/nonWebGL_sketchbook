@@ -11,6 +11,12 @@ function map(para, orMin, orMax, tarMin, tarMax) {
   return tarValue;
 }
 
+function constrain(para, min, max){
+  if(para < min) para = min;
+  if(para > max) para = max;
+  return para;
+}
+
 (function (exports) {
 
   function DelaunayLight(can) {
@@ -64,7 +70,7 @@ function map(para, orMin, orMax, tarMin, tarMax) {
     }
   };
 
-  DelaunayLight.prototype.mouseEvent = function (x, y) {
+  DelaunayLight.prototype.mouseMoveEvent = function (x, y) {
     for (var l = 0; l < this.myTriangles.length; l++) {
       this.myTriangles[l].calDis(x, y);
     }
@@ -75,7 +81,6 @@ function map(para, orMin, orMax, tarMin, tarMax) {
     this.b = b;
     this.c = c;
     this.sum = sum;
-    this.copySum = sum;
     this.canvas = can;
     this.context = this.canvas.getContext("2d");
     this.red = Math.floor(Math.random() * 50);

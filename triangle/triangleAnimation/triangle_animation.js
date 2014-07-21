@@ -1,48 +1,43 @@
 (function (exports) {
 
+  var colors = [
+
+    ["#FF4E50", "#FC913A", "#F9D423", "#E1F5C4"], //http://www.colourlovers.com/palette/937624/Dance_To_Forget
+    ["#029DAF", "#E5D599", "#FFC219", "#E32551"], //http://www.colourlovers.com/palette/985632/Invisible_Look!
+    ["#551BB3", "#268FBE", "#3DDB8F", "#A9F04D"], //http://www.colourlovers.com/palette/784112/Spring_Cleaning
+    ["#A7CD2C", "#CEE891", "#E1F5C4", "#50C8C6"], //http://www.colourlovers.com/palette/1008442/Ambiental_Spray
+
+  ];
+
+
   function DelaunayAnimation(can) {
     this.canvas = can;
     this.context = this.canvas.getContext("2d");
     this.verticesNumber = 64;
     this.vertices = new Array(this.verticesNumber);
     this.triangles;
-    this.r;
-    this.g;
-    this.b;
     this.frame = 0;
     this.vertexes = [];
-
-    // for(i = vertices.length; i--; ) {
-    //   do {
-    //     x = Math.random() - 0.5;
-    //     y = Math.random() - 0.5;
-    //   } while(x * x + y * y > 0.25);
-
-    //   x = (x * 0.96875 + 0.5) * canvas.width;
-    //   y = (y * 0.96875 + 0.5) * canvas.height;
-
-    //   vertices[i] = [x, y];
-    // }
-
   }
 
   DelaunayAnimation.prototype.init = function () {
+    var index = 0;
+    for(var i = -100; i < 1400; i += 200){
+      for( var k = -100; k < 400; k += 200){
+        this.vertices[index] = [ i, k ];
+        this.vertexes.push(new Vertex(i, k , this.canvas));
+        index++;
+      }
+    }
 
-    for (var j = 0; j < this.vertices.length; j++) {
+
+    for (var j = 22; j < this.vertices.length; j++) {
       //vehicles.push( new Vehicle( new p5.Vector(random(width), random(height)), 8, 0.9, new p5.Vector(x, y) ) );
-      var x = Math.floor(Math.random() * this.canvas.width);
-      var y = Math.floor(Math.random() * this.canvas.height);
+      var x = Math.floor(Math.random() * this.canvas.width );
+      var y = Math.floor(Math.random() * this.canvas.height );
       this.vertices[j] = [x, y];
       this.vertexes.push(new Vertex(x, y, this.canvas));
     }
-
-    // for(var i = 0; i<16; i++){
-    //    x = i*640/16;
-    //   for(var j=0; j<16; j++){
-    //     y = j*480/16;
-    //     vertices[i+j*16] = [x, y];
-    //   }
-    // }
 
     console.time("triangulate");
     this.triangles = Delaunay.triangulate(this.vertices);
@@ -61,24 +56,6 @@
 
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    //if (this.frame % 60 === 0) {
-
-    // for (var j = 0; j < this.vertices.length; j++) {
-    //   // vertices[j][0] = vertices[j][0] += Math.cos(theta);
-    //   // vertices[j][1] = vertices[j][1] += Math.sin(theta);
-    //   this.vertices[j][0] = this.vertices[j][0] += (Math.random() * 4 - 2);
-    //   this.vertices[j][1] = this.vertices[j][1] += (Math.random() * 4 - 2);
-    // }
-
-    //}
-
-    // for(var i = 0; i<16; i++){
-    //    x = i*640/16;
-    //   for(var j=0; j<16; j++){
-    //     y = j*480/16;
-    //     vertices[i+j*16] = [x, y];
-    //   }
-    // }
     for (var j = 0; j < this.vertexes.length; j++) {
       this.vertexes[j].update();
       this.vertices[j] = [this.vertexes[j].x, this.vertexes[j].y];
@@ -90,12 +67,14 @@
 
     var k = 0;
     for (var i = this.triangles.length; i >= 3; i -= 3) {
-      var r = Math.floor(Math.random() * 255);
-      var g = Math.floor(Math.random() * 255);
-      var b = Math.floor(Math.random() * 255);
-      //context.fillStyle = "rgb(" + r.toString() + ","+ g.toString() + "," + b.toString() +")";
-      this.context.fillStyle = 'rgb(0,' + Math.floor(255 - k * 4) + ',' +
-        Math.floor(255 - k * 2) + ')';
+      // if(k % 2 === 0){
+      // this.context.fillStyle = 'rgb(250,'+ Math.floor(250 - k * 4) + ',' +
+      // Math.floor(250 - k * 2)+ ')';
+      // }else{
+      this.context.fillStyle = 'rgb(0,'+ Math.floor(250 - k * 6) + ',' +
+      Math.floor(250 - k * 3)+ ')';
+    //}
+      console.log(this.context.fillStyle);
       this.context.strokeStyle = this.context.fillStyle;
       this.context.beginPath();
       this.context.moveTo(this.vertices[this.triangles[i - 1]][0], this.vertices[
@@ -107,31 +86,12 @@
       this.context.closePath();
       this.context.stroke();
       this.context.fill();
-      k += 0.6;
+      k +=0.6;
 
     }
 
-    // for(i = triangles.length; i>3; i-- ) {
-    //   context.moveTo(vertices[triangles[i-1]][0], vertices[triangles[i-1]][1]);
-    //   context.lineTo(vertices[triangles[i-2]][0], vertices[triangles[i-2]][1]);
-    //   context.lineTo(vertices[triangles[i-3]][0], vertices[triangles[i-3]][1]);
-    // }
-    // var count = 0;
-    //       for(i = triangles.length; i; ) {
-    //         ctx.beginPath();
-    //         --i; ctx.moveTo(vertices[triangles[i]][0], vertices[triangles[i]][1]);
-    //         --i; ctx.lineTo(vertices[triangles[i]][0], vertices[triangles[i]][1]);
-    //         --i; ctx.lineTo(vertices[triangles[i]][0], vertices[triangles[i]][1]);
-    //         ctx.closePath();
-    //         ctx.stroke();
-    //         count ++;
-    //       }
-    //       console.log(count, triangles.length)
-
-    //requestAnimationFrame(DelaunayAnimation.prototype.draw);
-
   };
-  //}
+
 
   function Vertex(x, y, can) {
     this.x = x;

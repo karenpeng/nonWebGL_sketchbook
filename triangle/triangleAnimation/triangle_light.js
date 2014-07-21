@@ -16,7 +16,7 @@ function map(para, orMin, orMax, tarMin, tarMax) {
   function DelaunayLight(can) {
     this.canvas = can;
     this.context = this.canvas.getContext("2d");
-    this.verticesNumber = 64;
+    this.verticesNumber = 84;
     this.vertices = new Array(this.verticesNumber);
     this.triangles;
     this.frame = 0;
@@ -24,11 +24,19 @@ function map(para, orMin, orMax, tarMin, tarMax) {
   }
 
   DelaunayLight.prototype.init = function () {
+    
+    var index = 0;
+    for(var i = -100; i < 1400; i += 200){
+      for( var k = -100; k < 600; k += 200){
+        this.vertices[index] = [ i, k ];
+        index++;
+      }
+    }
 
-    for (var j = 0; j < this.vertices.length; j++) {
+    for (var j = 30; j < this.vertices.length; j++) {
       //vehicles.push( new Vehicle( new p5.Vector(random(width), random(height)), 8, 0.9, new p5.Vector(x, y) ) );
-      var x = Math.floor(Math.random() * this.canvas.width);
-      var y = Math.floor(Math.random() * this.canvas.height);
+      var x = Math.floor(Math.random() * this.canvas.width );
+      var y = Math.floor(Math.random() * this.canvas.height );
       this.vertices[j] = [x, y];
     }
 
@@ -45,9 +53,7 @@ function map(para, orMin, orMax, tarMin, tarMax) {
         k,
         this.canvas
       ));
-
       k += 0.6;
-
     }
 
   };
@@ -69,25 +75,40 @@ function map(para, orMin, orMax, tarMin, tarMax) {
     this.b = b;
     this.c = c;
     this.sum = sum;
+    this.copySum = sum;
     this.canvas = can;
     this.context = this.canvas.getContext("2d");
-    this.red = Math.floor(Math.random() * 100);
+    this.red = Math.floor(Math.random() * 50);
+    this.close = false;
   }
 
   MyTriangle.prototype.calDis = function (x, y) {
     var dist1 = dist(this.a[0], this.a[1], x, y);
     var dist2 = dist(this.b[0], this.b[1], x, y);
     var dist3 = dist(this.c[0], this.c[1], x, y);
-    this.sum = (dist1 + dist2 + dist3);
-    //console.log(this.sum);
+    var total = dist1 + dist2 + dist3;
+    this.close = total < 300;
+      //this.sum = total;
+      //this.sum = map(this.sum, 10, 500, 0, 255);
+      //console.log(this.sum);
+      if(this.close){
+        //this.sum = total;
+        //this.sum = map(this.sum, 10, 500, 0, 255);
+        this.lighten = total;
+        this.lighten = map(this.lighten, 10, 500, 60, 0);
+      }else{
+        //this.sum = this.copySum;
+      }
   };
 
   MyTriangle.prototype.render = function (triNum) {
-    if (this.sum > triNum) {
-      this.sum = map(this.sum * this.sum, 1000, 16000000, 0, 120);
-    }
+    if(!this.close){
     this.context.fillStyle = 'rgb(' + this.red.toString() + ',' + Math.floor(
-      this.sum * 2) + ',' + Math.floor(this.sum * 2) + ')';
+      255-this.sum *4 ) + ',' + Math.floor( 255-this.sum*3 ) + ')';
+    }else{
+      this.context.fillStyle = 'rgb(' + this.red.toString() + ',' + Math.floor(
+      255-this.sum *4 +this.lighten) + ',' + Math.floor( 255-this.sum*3 +this.lighten) + ')';
+    }
     this.context.strokeStyle = this.context.fillStyle;
     this.context.beginPath();
     this.context.moveTo(this.a[0], this.a[1]);

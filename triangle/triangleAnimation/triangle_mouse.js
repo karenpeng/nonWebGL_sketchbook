@@ -1,5 +1,0 @@
-//mouse
-
-//vechicle
-//seek
-//separate

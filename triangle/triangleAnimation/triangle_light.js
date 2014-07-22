@@ -11,9 +11,9 @@ function map(para, orMin, orMax, tarMin, tarMax) {
   return tarValue;
 }
 
-function constrain(para, min, max){
-  if(para < min) para = min;
-  if(para > max) para = max;
+function constrain(para, min, max) {
+  if (para < min) para = min;
+  if (para > max) para = max;
   return para;
 }
 
@@ -30,19 +30,26 @@ function constrain(para, min, max){
   }
 
   DelaunayLight.prototype.init = function () {
-    
+
     var index = 0;
-    for(var i = -100; i < 1400; i += 200){
-      for( var k = -100; k < 600; k += 200){
-        this.vertices[index] = [ i, k ];
-        index++;
-      }
+    for (var i = 0; i < 1400; i += 200) {
+      this.vertices[index] = [i, -10];
+      index++;
+      this.vertices[index] = [i, 400];
+      index++;
     }
 
-    for (var j = 30; j < this.vertices.length; j++) {
+    for (var k = 0; k < 400; k += 200) {
+      this.vertices[index] = [-10, k];
+      index++;
+      this.vertices[index] = [1400, k];
+      index++;
+    }
+
+    for (var j = 17; j < this.vertices.length; j++) {
       //vehicles.push( new Vehicle( new p5.Vector(random(width), random(height)), 8, 0.9, new p5.Vector(x, y) ) );
-      var x = Math.floor(Math.random() * this.canvas.width );
-      var y = Math.floor(Math.random() * this.canvas.height );
+      var x = Math.floor(Math.random() * this.canvas.width);
+      var y = Math.floor(Math.random() * this.canvas.height);
       this.vertices[j] = [x, y];
     }
 
@@ -93,26 +100,28 @@ function constrain(para, min, max){
     var dist3 = dist(this.c[0], this.c[1], x, y);
     var total = dist1 + dist2 + dist3;
     this.close = total < 300;
+    //this.sum = total;
+    //this.sum = map(this.sum, 10, 500, 0, 255);
+    //console.log(this.sum);
+    if (this.close) {
       //this.sum = total;
       //this.sum = map(this.sum, 10, 500, 0, 255);
-      //console.log(this.sum);
-      if(this.close){
-        //this.sum = total;
-        //this.sum = map(this.sum, 10, 500, 0, 255);
-        this.lighten = total;
-        this.lighten = map(this.lighten, 10, 500, 60, 0);
-      }else{
-        //this.sum = this.copySum;
-      }
+      this.lighten = total;
+      this.lighten = map(this.lighten, 10, 500, 60, 0);
+    } else {
+      //this.sum = this.copySum;
+    }
   };
 
   MyTriangle.prototype.render = function (triNum) {
-    if(!this.close){
-    this.context.fillStyle = 'rgb('+ Math.floor(this.red)+  ',' + Math.floor(
-      255-this.sum *6 ) + ',' + Math.floor( 255-this.sum*3 ) + ')';
-    }else{
-      this.context.fillStyle = 'rgb('+ Math.floor(this.red+this.lighten)+ ','+ Math.floor(
-      255-this.sum *6 +this.lighten) + ',' + Math.floor( 255-this.sum*3 +this.lighten) + ')';
+    if (!this.close) {
+      this.context.fillStyle = 'rgb(' + Math.floor(this.red) + ',' + Math.floor(
+        255 - this.sum * 6) + ',' + Math.floor(255 - this.sum * 3) + ')';
+    } else {
+      this.context.fillStyle = 'rgb(' + Math.floor(this.red + this.lighten) +
+        ',' + Math.floor(
+          255 - this.sum * 6 + this.lighten) + ',' + Math.floor(255 - this.sum *
+          3 + this.lighten) + ')';
     }
     this.context.strokeStyle = this.context.fillStyle;
     this.context.beginPath();

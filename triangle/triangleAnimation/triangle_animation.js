@@ -9,7 +9,6 @@
 
   ];
 
-
   function DelaunayAnimation(can) {
     this.canvas = can;
     this.context = this.canvas.getContext("2d");
@@ -22,21 +21,30 @@
 
   DelaunayAnimation.prototype.init = function () {
     var index = 0;
-    for(var i = -100; i < 1400; i += 200){
-      for( var k = -100; k < 400; k += 200){
-        this.vertices[index] = [ i, k ];
-        this.vertexes.push(new Vertex(i, k , this.canvas));
-        index++;
-      }
+    for (var i = 0; i < 1400; i += 200) {
+      this.vertices[index] = [i, -100];
+      this.vertexes.push(new Vertex(i, -100, this.canvas, "static"));
+      index++;
+      this.vertices[index] = [i, 400];
+      this.vertexes.push(new Vertex(i, 400, this.canvas, "static"));
+      index++;
     }
 
+    for (var k = 0; k < 400; k += 200) {
+      this.vertices[index] = [-100, k];
+      this.vertexes.push(new Vertex(-100, k, this.canvas, "static"));
+      index++;
+      this.vertices[index] = [1400, k];
+      this.vertexes.push(new Vertex(1400, k, this.canvas, "static"));
+      index++;
+    }
 
-    for (var j = 22; j < this.vertices.length; j++) {
+    for (var j = 17; j < this.vertices.length; j++) {
       //vehicles.push( new Vehicle( new p5.Vector(random(width), random(height)), 8, 0.9, new p5.Vector(x, y) ) );
-      var x = Math.floor(Math.random() * this.canvas.width );
-      var y = Math.floor(Math.random() * this.canvas.height );
+      var x = Math.floor(Math.random() * this.canvas.width);
+      var y = Math.floor(Math.random() * this.canvas.height);
       this.vertices[j] = [x, y];
-      this.vertexes.push(new Vertex(x, y, this.canvas));
+      this.vertexes.push(new Vertex(x, y, this.canvas, "dynamic"));
     }
 
     console.time("triangulate");
@@ -69,9 +77,10 @@
       // this.context.fillStyle = 'rgb(250,'+ Math.floor(250 - k * 4) + ',' +
       // Math.floor(250 - k * 2)+ ')';
       // }else{
-      this.context.fillStyle = 'rgb('+ Math.floor(k*1.4)+ ','+ Math.floor(250 - k * 6) + ',' +
-      Math.floor(250 - k * 3)+ ')';
-    //}
+      this.context.fillStyle = 'rgb(' + Math.floor(k * 1.4) + ',' + Math.floor(
+        250 - k * 6) + ',' +
+        Math.floor(250 - k * 3) + ')';
+      //}
       //console.log(this.context.fillStyle);
       this.context.strokeStyle = this.context.fillStyle;
       this.context.beginPath();
@@ -84,26 +93,28 @@
       this.context.closePath();
       this.context.stroke();
       this.context.fill();
-      k +=0.6;
+      k += 0.6;
 
     }
 
   };
 
-
-  function Vertex(x, y, can) {
+  function Vertex(x, y, can, status) {
     this.x = x;
     this.y = y;
     this.vX = Math.random() * 0.2 - 0.1;
     this.vY = Math.random() * 0.2 - 0.1;
     this.can = can;
+    this.status = status;
   }
 
   Vertex.prototype.update = function () {
-    this.x += this.vX;
-    this.y += this.vY;
-    if (this.x < 0 || this.x > this.can.width) this.vX *= -1;
-    if (this.y < 0 || this.y > this.can.height) this.vY *= -1;
+    if (this.status === "dynamic") {
+      this.x += this.vX;
+      this.y += this.vY;
+      if (this.x < 0 || this.x > this.can.width) this.vX *= -1;
+      if (this.y < 0 || this.y > this.can.height) this.vY *= -1;
+    }
   };
 
   exports.DelaunayAnimation = DelaunayAnimation;

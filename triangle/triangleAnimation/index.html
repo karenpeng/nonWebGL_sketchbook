@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <style type="text/css">
+      html, body{
+        top: 0;
+        left: 0;
+        margin: 0;
+        padding: 0;
+      }
+      video{
+        display: none;
+      }
+      #triangleTest{
+        width: 1280px;
+        height: 245px;
+      }
+      #option{
+        position: absolute;
+      }
+      h1{
+        position: absolute;
+        color: white;
+        text-align: center;
+        /*left: 50%;
+        width: 200px;
+        margin-left: -100px;*/
+        margin-top: 100px;
+        margin-left: 640px;
+      }
+      /*
+      #container{
+        width: 1280px;
+        margin: 0 auto;
+        color: white;
+      }
+      */
+    </style>
+  </head>
+  <body>
+    <div id='container'>
+      <div id="option">
+        <span>Animation Type:</span>
+        <select id="animationType">
+          <option value="DelaunayAnimation">triangle ambient</option>
+          <option value="DelaunayLight">triangle light</option>
+          <option value="DelaunayAvoid">triangle avoid</option>
+        </select>
+      </div>
+      <h1>Title</h1>
+      <canvas id="triangleTest" width="1280px" height="245px"></canvas>
+    </div>
+  </body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <!--<script type="text/javascript" src="http://paperjs.org/assets/js/rhill-voronoi-core.js"></script>-->
+  <script type="text/javascript" src="delaunay.js"></script>
+  <script type="text/javascript" src="triangle_animation.js"></script>
+  <script type="text/javascript" src="triangle_light.js"></script>
+  <script type="text/javascript" src="triangle_avoid.js"></script>
+  <script type="text/javascript" src="triangle_rader.js"></script>
+  <script type="text/javascript" src="pvector.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+</html>

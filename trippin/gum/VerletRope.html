@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Verlet</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/dat.gui.min.js"></script>
+	<script type="text/javascript" src="js/hsvColor.js"></script>
+	<script type="text/javascript" src="js/verlet.js"></script>
+	<script type="text/javascript" src="js/ImprovedNoise.js"></script>
+	<script type="text/javascript" src="js/paper-full.js"></script>
+
+	<script type="text/javascript">
+			var options = {
+				gravity: 0.6
+			};
+
+
+		window.onload = function(){
+
+			var gui = new dat.GUI(options);
+
+			gui.add(options,"gravity",-1.0,1.0);
+
+		}
+
+	</script>
+
+	<script type="text/paperscript" canvas="canvas">
+		// Warning: this is Paperscript, so it's a bit different from javascript
+
+		var centerX = window.innerWidth / 2;
+		var centerY = window.innerHeight / 4;
+
+		var handleDimOpacity = 0.3;
+		var handleOverOpacity = 0.5;
+
+
+
+		var sticks = [];
+		var verlets = [];
+		var i = 0;
+
+		var from = new Point(centerX,centerY);
+		var first = from;
+		var to;
+
+		var v1 = new VerletPoint(from.x,from.y);
+		v1.locked = true;
+		verlets.push(v1);
+
+		// ADD SEGMENTS TO OUR ROPE
+
+		while(i < 20){
+			to = new Point(from.x,from.y + 25);
+			v1 = addJoint(from,to,v1);
+			from = to;
+			i++;
+		}
+
+		// ADD A HANDLE TO THE TOP OF THE ROPE
+
+		addHandle(first,verlets[0]);
+
+		// ADD A NEW POINT, AND CONNECT A STICK TO THE PREVIOUS POINT
+
+		function addJoint(from,to,v1){
+			var v2 = new VerletPoint(to.x,to.y);
+			verlets.push(v2);
+
+			var s = new VerletStick(v1,v2);
+			sticks.push(s);
+
+			var l = new Path.Line(from,to);
+			l.strokeWidth = 2;
+			l.strokeColor = "white";
+			console.log(l);
+			s.line = l;
+			return v2;
+		}
+
+		function addHandle(position,link){
+			var c2 = new Path.Circle(position,10);
+			c2.link = link;
+			c2.fillColor = "white";
+			c2.opacity = handleDimOpacity;
+			addMouseEvents(c2);
+		}
+
+
+
+		// var c1 = new Path.Circle(new Point(),10);
+		// c1.fillColor = "white";
+		// c1.opacity = handleDimOpacity;
+		// var p1 = c1.position;
+
+		// p1.x = centerX;
+		// p1.y = centerY - 50;
+		// addMouseEvents(c1);
+
+
+		// var c2 = new Path.Circle(new Point(),10);
+		// c2.fillColor = "white";
+		// c2.opacity = handleDimOpacity;
+		// var p2 = c2.position;
+
+		// p2.x = centerX;
+		// p2.y = centerY + 50;
+		// addMouseEvents(c2);
+
+		function onFrame(e){
+			var i = 0;
+			while(i < verlets.length){
+				verlets[i].force(0,options.gravity);
+				verlets[i].update();
+				i++;
+			}
+
+			i = 0;
+			while(i < sticks.length){
+				sticks[i].contract();
+				i++;
+			}
+
+			i = 0;
+			while(i < sticks.length){
+				var s = sticks[i];
+				var l = s.line;
+				l.segments[0].point.x = s.pointa.x;
+				l.segments[0].point.y = s.pointa.y;
+
+				l.segments[1].point.x = s.pointb.x;
+				l.segments[1].point.y = s.pointb.y;
+				i++;
+			}
+
+			paper.view.draw();
+		}
+
+		function addMouseEvents(obj){
+			
+			obj.on({
+				mousedown: function(event) {
+					mouseIsDown = true;
+				},
+				mouseup: function(event) {
+					mouseIsDown = false;
+				},
+				mousedrag: function(event) {
+					this.position += event.delta;
+					this.link.x = this.position.x;
+					this.link.y = this.position.y;
+				},
+				mouseenter: function(event) {
+					this.opacity = handleOverOpacity;
+				},
+				mouseleave: function(event) {
+					this.opacity = handleDimOpacity;
+				}
+			});
+		}
+
+	</script>
+</head>
+<body style="background-color: black;">
+	<canvas id="canvas" resize></canvas>
+</body>
+</html>

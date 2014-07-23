@@ -3,8 +3,6 @@ var detectPoints = new DetectPoints(debugCanvas);
 var myCanvas = document.getElementById("myCanvas");
 var drawPoints = new DrawPoints(myCanvas);
 var cornerDetect = new CornerDetect(debugCanvas);
-		var pp = document.getElementById("pp");
-		var debugPp = document.getElementById("reducePp");
 
 function setup(){
 	detectPoints.init();
@@ -12,11 +10,6 @@ function setup(){
 }
 
 function update(){
-	pp.getContext("2d").fillStyle="white";
-	pp.getContext("2d").fillRect(0,0,160,120);
-	reducePp.getContext("2d").fillStyle="white";
-	reducePp.getContext("2d").fillRect(0,0,160,120);
-	
 	detectPoints.draw();
 	drawPoints.getPoints(detectPoints.points, detectPoints.width, detectPoints.height);
 	drawPoints.draw();

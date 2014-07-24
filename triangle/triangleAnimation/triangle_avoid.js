@@ -208,7 +208,97 @@
     ctx.fillRect(this.loc.x, this.loc.y, 2, 2);
   }
 
-  //--------------------------------------------
+//---------------------------------------------
 
-  exports.DelaunayAvoid = DelaunayAvoid;
+	function Vehicle(l, ms, mf, t, can, status){
+		this.loc = new PVector(l.x, l.y);
+		this.vel = new PVector(0,0);
+		this.acc = new PVector(0,0);
+		this.maxSpeed = ms;
+		this.maxForce = mf;
+		this.r = 5;
+		this.target = t;
+		this.sepDist = 100; 
+		this.can = can;
+		this.status = status;
+	}
+
+	Vehicle.prototype.update = function(){
+		this.vel.add(this.acc);
+		this.vel.limit(this.maxSpeed);
+		this.loc.add(this.vel);
+		this.acc.mult(0);
+		//this.borders();
+	};
+
+	Vehicle.prototype.applyForce = function(f){
+		this.acc.add(f);
+	};
+
+	Vehicle.prototype.borders = function(){
+		if(this.loc.x < -this.r) this.loc.x = this.can.width + this.r;
+		if(this.loc.y < -this.r) this.loc.y = this.can.height + this.r;
+		if(this.loc.x > this.can.width + this.r) this.loc.x = -this.r;
+		if(this.loc.y > this.can.height + this.r) this.loc.y = -this.r;
+	};
+
+	Vehicle.prototype.applyBehaviors = function(){
+		var sepForce = this.separate();
+		var seekForce = this.seek();
+		sepForce.mult(2);
+		seekForce.mult(1);
+		this.applyForce(sepForce);
+		this.applyForce(seekForce);
+	};
+
+	Vehicle.prototype.seek = function(){
+		var desire = PVector.sub(this.target, this.loc);
+		var d = desire.mag();
+
+		if(d<100){
+			var m = map(d, 0, 100, 0, this.maxSpeed);
+			desire.normalize();
+			desire.mult(m);
+		}else{
+			desire.normalize();
+			desire.mult(this.maxSpeed);
+		}
+		var steer = PVector.sub(desire, this.vel);
+		steer.limit(this.maxForce);
+		return steer;
+	};
+
+	Vehicle.prototype.separate = function(x,y){
+		var dd = PVector.sub(this.loc, new PVector(x,y));
+		var d = dd.mag();
+		//console.log(d);
+		if(d < this.sepDist){
+			var diff = PVector.sub(this.loc, new PVector(x,y));
+			diff.normalize();
+			diff.mult(this.maxSpeed);
+			diff.mult(this.sepDist / d);
+
+			var steer = PVector.sub(diff, this.vel);
+			steer.limit(this.maxForce);
+			return steer;
+		}else{
+			return new PVector(0,0);
+		}
+	}
+	
+	Vehicle.prototype.getDis = function(){
+		var dis = dist(this.loc.x, this.loc.y, this.target.x, this.target.y);
+		return dis;
+	}
+
+	Vehicle.prototype.render = function(){
+		var ctx = this.can.getContext("2d");
+		ctx.fillStyle = "#FFFFFF";
+		ctx.fillRect(this.loc.x, this.loc.y, 2, 2);
+	}
+	
+	//--------------------------------------------
+
+	exports.DelaunayAvoid = DelaunayAvoid;
+
 })(this);

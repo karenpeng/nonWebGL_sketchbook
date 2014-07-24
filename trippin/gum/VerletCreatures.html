@@ -1,0 +1,406 @@
+<!--
+
+An homage to Communion by Matt Pyke & Field: 
+http://universaleverything.com/#clients/la-gaite-lyrique
+http://www.field.io/project/communion
+
+Original piece credits:
+Developed by Field
+Direction by Matt Pyke
+
+Note: This does not actually use code from the original projects, it's simply an illustration of the concepts originally utilized.
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Verlet5 - Locked Points</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/dat.gui.min.js"></script>
+	<script type="text/javascript" src="js/hsvColor.js"></script>
+	<script type="text/javascript" src="js/stats.min.js"></script>
+	<script type="text/javascript" src="js/verlet.js"></script>
+	<script type="text/javascript" src="js/ImprovedNoise.js"></script>
+
+
+</head>
+<body style="background-color: black;" id="bodyTag">
+	<canvas id="canvas"></canvas>
+
+
+	<script type="text/javascript">
+			var options = {
+				speed: 0.2,
+				forceMultiplier: 1.0,
+				movementAmp: 14.0
+			};
+
+		// variables that we need to keep track of everything in the scene
+
+
+
+		var sticks = [];
+		var verlets = [];
+		var movementLoops = [];
+		var i = 0;
+		var canvas = document.getElementById("canvas");
+
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+
+		var centerX = canvas.getAttribute('width') / 2;
+		var centerY = canvas.getAttribute('height') / 2;
+
+		// these are incremented each frame. When used with Sin/Cos, it results in the circular movements over time.
+
+		window.tickX = 0.0;
+		window.tickY = 0.0;
+		window.sinTick = 0.00;
+		
+
+		// Generators to add points to the verlet system
+
+		function addMovement(v,func){
+			v.forceLoop = func;
+			movementLoops.push(v);
+		}
+		window.addMovement = addMovement;
+
+		function addStick(v1,v2){
+			var s = new VerletStick(v1,v2);
+			sticks.push(s);
+			s.strokeWidth = 3;
+			s.strokeColor = currentColor;
+		}
+		window.addStick = addStick;
+
+		function addVerlet(x,y,locked){
+			var v = new VerletPoint(x,y);
+			if(locked) v.locked = true;
+			v.strokeColor = currentColor;
+			verlets.push(v);
+
+			return v;
+		}
+		window.addVerlet = addVerlet;
+
+		function addRubber(x,y,locked){
+			var v = new RubberPoint(x,y);
+			if(locked) v.locked = true;
+			v.strokeColor = currentColor;
+			verlets.push(v);
+
+			return v;
+		}
+		window.addRubber = addRubber;
+
+
+		// Generators to create different types of creatures
+
+		function makeArms(cx,cy){
+			var offx = Math.random() * 100 - 50;
+			var offy = Math.random() * 100 - 50;
+			var limbPercent = Math.random() * 1.5 + 0.5;
+
+			var addThird = (Math.random() < 0.5);
+
+			// MAKE SYMMETRICAL GUY
+			var v2 = addRubber(cx-offx,cy+offy);
+			var v3 = addRubber(cx,cy);
+			var v4 = addRubber(cx+offx,cy+offy);
+			var v1;
+			var v5;
+
+
+			var m1, m2;
+			if(addThird){
+				v1 = addRubber(cx-offx*limbPercent,cy);
+				v5 = addRubber(cx+offx*limbPercent,cy);
+
+				v6 =  addVerlet(cx-offx*limbPercent * 2,cy);
+				v7 =  addVerlet(cx+offx*limbPercent * 2,cy);
+				
+				v6.locked = true;
+				v7.locked = true;
+
+				addStick(v6,v1);
+				addStick(v1,v2);
+				addStick(v2,v3);
+				
+				addStick(v3,v4);
+				addStick(v4,v5);
+				addStick(v5,v7);
+
+				m1 = v6;
+				m2 = v7;
+			} else {
+				v1 = addVerlet(cx-offx*limbPercent,cy);
+				v5 = addVerlet(cx+offx*limbPercent,cy);
+
+
+				v1.locked = true;
+				v5.locked = true;
+				
+				addStick(v1,v2);
+				addStick(v2,v3);
+				addStick(v3,v4);
+				addStick(v4,v5);	
+
+				m1 = v1;
+				m2 = v5;
+			}
+
+			var amount = (Math.random() * 1.0 + 0.25 ) * options.movementAmp;
+			m1.amp = amount;
+			m1.origX = m1.x;
+			m1.origY = m1.y;
+			addMovement(m1,function(){ 
+				// this.x = this.origX + Math.sin(window.tickX) * this.amp* options.forceMultiplier; 
+				this.y = this.origY + Math.sin(window.tickY) * this.amp* options.forceMultiplier; 
+			});
+
+			m2.amp = amount;
+			m2.origX = m2.x;
+			m2.origY = m2.y;
+			addMovement(m2,function(){ 
+				// this.x = this.origX + Math.sin(window.tickX) * this.amp* options.forceMultiplier; 
+				this.y = this.origY + Math.sin(window.tickY) * this.amp* options.forceMultiplier; 
+			});
+
+
+		}
+
+		function makeSplat(cx,cy){
+			var v1 = addVerlet(cx,cy);
+			v1.locked = true;
+			var i = 0;
+			while(i < Math.floor(Math.random() * 4 + 3)){
+				var r = Math.random() * Math.PI * 2;
+				var ox = Math.cos(r) * Math.random() * 70;
+				var oy = Math.sin(r) * Math.random() * 70;
+				var v = addRubber(cx + ox, cy + oy);
+				v.rubberAmplitude = 0.07;
+				addStick(v1,v);
+				i++;
+			}
+
+			v1.amp = (Math.random() + 0.9) * options.movementAmp;
+			v1.origX = v1.x;
+			v1.origY = v1.y;
+			addMovement(v1,function(){
+				this.x = this.origX + Math.cos(window.tickX) * this.amp* options.forceMultiplier;
+				this.y = this.origY + Math.sin(window.tickY) * this.amp* options.forceMultiplier;
+			});
+		}
+
+
+		function makeSingleArm(cx,cy){
+			var v1 = addRubber(cx ,cy);
+			// v1.locked = true;
+			var ox = cx + Math.random() * 100 - 50;
+			var oy = cy + Math.random() * 100 - 50;
+			var v2 = addRubber(ox, oy);
+			ox += Math.random() * 100 - 25;
+			oy += Math.random() * 100 - 25;
+			var v3 = addVerlet(ox, oy);
+			v3.locked = true;
+			addStick(v1,v2);
+			addStick(v2,v3);
+
+			var t1, t2;
+
+			t1 = v2;
+			t2 = v3;
+
+			var amount = (Math.random()* 1.75 + 0.75) * options.movementAmp;
+			// t1.amp = amount;
+			// t1.origX = t1.x;
+			// t1.origY = t1.y;
+			// addMovement(t1,function(){ 
+			// 	this.x = this.origX + Math.cos(window.tickX * 0.5) * this.amp * options.forceMultiplier;
+			// 	this.y = this.origY + Math.sin(window.tickY * 0.5) * this.amp * options.forceMultiplier; 
+			// });
+
+			t2.amp = amount;
+			t2.origX = t2.x;
+			t2.origY = t2.y;
+			addMovement(t2,function(){ 
+				this.x = this.origX + Math.cos(window.tickX) * this.amp * options.forceMultiplier;
+				this.y = this.origY + Math.sin(window.tickY) * this.amp* options.forceMultiplier; 
+			});
+		}
+
+		// Loop to generate the various creatures in a grid on the stage
+
+		var generatorArray = [makeArms,makeSingleArm,makeSplat];//
+
+		function generateCharacters()
+		{
+			var x = 0;
+			var y = 0;
+			var xTotal = 4;
+			var yTotal = 3;
+			var spacing = 220;
+			var shiftX = (xTotal-1) / 2 * spacing;
+			var shiftY = (yTotal-1) / 2 * spacing;
+			while(y < yTotal){
+				x = 0;
+				while(x < xTotal){
+					var h = Math.random() * 0.3 + 0.8;
+					if(h > 1.0 ) h -= 1.0;
+					window.currentColor = HSVColor.hsvToHex(h,Math.random() * 0.2 + 0.8,Math.random() * 0.2 + 0.8);
+					var f = generatorArray[Math.floor(Math.random() * generatorArray.length)];
+					var tx = x * spacing + centerX - shiftX;
+					var ty = y * spacing + centerY - shiftY;
+					f(tx,ty);
+					x++;
+				}
+				y++;
+			}
+		}
+
+		// Clears the stage and generates new creatures
+
+		options.Redraw = function(){
+			verlets = [];
+			sticks = [];
+			movementLoops = [];
+			generateCharacters();
+		}
+
+		// keep track of the framerate
+
+		var stats;
+		function addStats(){
+			stats = new Stats();
+			stats.domElement.style.position = "absolute";
+			stats.domElement.style.top = "0px";
+			stats.domElement.style.zIndex = 100;
+			return document.getElementById("bodyTag").appendChild(stats.domElement);
+		}
+
+		// setup the sliders and options in the corner of the screen
+
+		window.onload = function(){
+
+			//addStats();
+
+			window.gui = gui = new dat.GUI();
+			gui.add(options,"speed",0.01,0.5);
+			gui.add(options,"movementAmp",0.01,50.0);
+			gui.add(options,"Redraw");
+
+			generateCharacters();
+
+			var canvas = document.getElementById("canvas");
+			// canvas.width = window.innerWidth;
+			// canvas.height = window.innerHeight;
+			var ctx = canvas.getContext("2d");
+
+			var PI2 = Math.PI * 2;
+
+			var MODE_BOTH = 0;
+			var MODE_X = 1;
+			var MODE_Y = 2;
+			var MODE_BOTH_REV = 3;
+			var MODE_X_REV = 4;
+			var MODE_Y_REV = 5;
+
+			var mode = MODE_BOTH;
+
+			// setInterval(function(){
+			// 	mode = Math.floor(Math.random() * 6);
+			// 	console.log(mode);
+			// },3000);
+
+
+			function verletLoop(){
+				canvas.width = canvas.width; // refresh
+				var i = 0;
+
+
+				// currently unused
+				switch(mode){
+					case MODE_BOTH: 
+						window.tickX += options.speed ;
+						window.tickY += options.speed ;
+						break;
+					case MODE_X: 
+						window.tickX += options.speed ;
+						break;	
+					case MODE_Y: 
+						window.tickY += options.speed ;
+						break;	
+					case MODE_BOTH_REV: 
+						window.tickX -= options.speed ;
+						window.tickY -= options.speed ;
+						break;	
+					case MODE_X_REV: 
+						window.tickX -= options.speed ;
+						break;	
+					case MODE_Y_REV: 
+						window.tickY -= options.speed ;
+						break;	
+				}
+
+				
+				while(i < movementLoops.length){
+					movementLoops[i].forceLoop();
+					i++;
+				}
+
+				i = 0;
+				while(i < verlets.length){
+					verlets[i].update();
+					i++;
+				}
+
+				i = 0;
+				while(i < sticks.length){
+					sticks[i].contract();
+					i++;
+				}
+
+
+				i = 0;
+
+				while(i < sticks.length){
+					ctx.beginPath();
+					var s = sticks[i];
+					ctx.lineWidth = 3;
+					ctx.strokeStyle = s.strokeColor;
+					// ctx.strokeStyle = "#ffffff";
+					ctx.moveTo(s.pointa.x,s.pointa.y);
+					ctx.lineTo(s.pointb.x,s.pointb.y);
+					i++;
+					ctx.stroke();
+				}
+
+				i = 0;
+				while(i < verlets.length){
+					ctx.beginPath();
+					ctx.fillStyle = verlets[i].strokeColor;
+					ctx.moveTo(verlets[i].x,verlets[i].y);
+					ctx.arc(verlets[i].x,verlets[i].y,4,0,PI2,true);
+					i++;
+					ctx.fill();
+				}
+
+
+
+				// paper.view.draw();
+				// stats.update();
+				requestAnimationFrame(verletLoop);
+			}
+			verletLoop();
+
+
+
+
+		}
+	</script>
+</body>
+</html>

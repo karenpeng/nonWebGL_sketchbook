@@ -1,0 +1,266 @@
+<!--
+
+An homage to the 2007 Lovebytes piece: http://universaleverything.com/#clients/lovebytes
+
+Original piece credits:
+Developed by Karsten Schmidt
+Direction by Matt Pyke
+
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Amoeba</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/dat.gui.min.js"></script>
+	<script type="text/javascript" src="js/hsvColor.js"></script>
+	<script type="text/javascript" src="js/ImprovedNoise.js"></script>
+	<script type="text/javascript" src="js/paper-full.js"></script>
+
+	<script type="text/javascript">
+			var options = {
+				noise: {
+					amp: 5.0 + Math.random() * 10,
+					zoom: 0.01,
+					speed: Math.random() * 0.02 + 0.01,
+				},
+
+				hair: {
+					length: Math.random() * 20 + 10
+				},
+				hue: Math.random(),
+				handleCount: Math.floor( 1 + Math.random() * 6),
+
+				Redraw: function(){
+					paper.project.activeLayer.removeChildren();	
+					this.hue = Math.random();
+					initializePath();
+				}
+
+			};
+
+
+		window.onload = function(){
+
+			var gui = new dat.GUI(options);
+
+			gui.add(options.hair,"length",0.0,30);
+			gui.add(options,"hue",0.0,1.0);
+			gui.add(options,"handleCount",1,10).step(1);
+
+			noiseFolder = gui.addFolder("Noise");
+			noiseFolder.open();
+
+			noiseFolder.add(options.noise,"amp",0.0001,50.0);
+			noiseFolder.add(options.noise,"zoom",0.0001,0.01);
+			noiseFolder.add(options.noise,"speed",0.0001,0.1);
+
+
+			gui.add(options,"Redraw");
+
+		}
+
+	</script>
+
+	<script type="text/paperscript" canvas="canvas">
+
+		// Warning: this is Paperscript, so it's a bit different from javascript
+		console.log(window.innerWidth,window.innerHeight);
+		var width, height, center;
+
+		var handleHighlightColor = "#666";
+		var handleDimOpacity = 0.3;
+		var handleOverOpacity = 0.5;
+
+		var mousePos = view.center / 2;
+		var pathHeight = mousePos.y;
+		var mouseIsDown = false;
+		var circles;
+		
+
+		var centerX = window.innerWidth / 2;
+		var centerY = window.innerHeight / 2;
+		var startY = centerY - 200;
+		var endY = centerY + 200;
+
+		var handleCount;
+		var shapeWidth = 100;
+
+		var path;
+
+		var noise = new ImprovedNoise();
+		var noiseShift = 0.0;
+
+		initializePath();
+		startNoiseLoop();
+
+		window.initializePath = initializePath;
+
+		function initializePath() {
+			handleCount = options.handleCount;
+			circles = [];
+			var i = 0;
+			var x = 100;
+			var y = startY;
+			var yStep = (endY - startY) / (handleCount+1);
+
+
+			// CHOOSE THE BODY COLOR, HAIRS, ETC
+
+			var h = options.hue;
+			var bodyColor = HSVColor.hsvToHex(h,0.4,0.9);
+
+			// hue shift the secondary color by half of the color spectrum (green -> red, etc)
+			h += 0.5;
+			if(h > 1.0) h -= 1.0; // hue only goes up to 1, so loop around otherwise
+			
+			var hairColor = HSVColor.hsvToHex(h,0.4,0.9);
+
+			path = new Path({
+				fillColor: bodyColor,
+				strokeWidth: options.hair.length,
+				strokeColor: hairColor,
+				dashArray: [Math.random() * 3, Math.random() * 8 + 2]
+			});
+			// MAKE THE EYES
+			var eyeY = Math.random() * 100 + 100;
+			var eyeSize = 5 + Math.random() * 15;
+			var eyeSpacing = Math.random() * 20 + eyeSize;
+			var irisSize = eyeSize / 3.0;
+			var irisShiftX = (Math.random() - 0.5 ) * irisSize * 2;
+			var irisShiftY = (Math.random() - 0.5 ) * irisSize * 2;
+
+			var rightEye = new Path.Circle(new Point(centerX + eyeSpacing, startY + eyeY),eyeSize);
+			rightEye.fillColor = "white";
+
+			var rightIris = new Path.Circle(new Point(irisShiftX + centerX + eyeSpacing, irisShiftY + startY + eyeY),irisSize);
+			rightIris.fillColor = "black";
+
+			var leftEye = new Path.Circle(new Point(centerX - eyeSpacing, startY + eyeY),eyeSize);
+			leftEye.fillColor = "white";
+
+			var leftIris = new Path.Circle(new Point(irisShiftX + centerX - eyeSpacing, irisShiftY + startY + eyeY),irisSize);
+			leftIris.fillColor = "black";
+
+			// CREATE THE BODY OF THE AMOEBA, AND THE DRAGGABLE HANDLES
+
+			var p = path.add(new Point(centerX,startY));
+			p.anchor = {x: p.point.x, y: p.point.y};
+
+			while(i < handleCount){
+				x = centerX + Math.sin(Math.PI * ((i+1) / (handleCount+1))) * shapeWidth + Math.random() * 50;
+				y += yStep;
+
+				var c = new Path.Circle(new Point(x,y),15);
+				c.fillColor = "white";
+				c.opacity = handleDimOpacity;
+
+				addMouseEvents(c);
+				circles.push(c);
+				path.add(c.position);
+				circles[i].pathRightId = path.segments.length - 1;
+				i++;
+			}
+
+			var p =	path.add(new Point(centerX, endY));
+			p.anchor = {x: p.point.x, y: p.point.y};
+
+
+			// LOOP AROUND FOR THE LEFT SIDE, WHICH IS MIRRORED
+
+			while(i > 0){
+				i--;
+				y -= yStep;
+				x = centerX - 100;
+				path.add(new Point(x,y));
+				circles[i].pathLeftId = path.segments.length - 1;
+			}
+
+			path.closePath();
+
+			updatePath();
+
+			redraw();
+		}
+
+		function redraw()
+		{
+			var noiseAmp = options.noise.amp;
+			var noiseZoom = options.noise.zoom;
+
+			var i = 0;
+			while(i < path.segments.length){
+				var s = path.segments[i];
+				s.point.x = s.anchor.x + noise.noise(s.point.x * noiseZoom,s.point.y * noiseZoom,noiseShift) * noiseAmp;
+				s.point.y = s.anchor.y + noise.noise(s.point.x * noiseZoom,s.point.y * noiseZoom,noiseShift) * noiseAmp;
+
+				i++;
+			}
+
+			path.smooth();
+			paper.view.draw();
+			noiseShift += options.noise.speed;
+
+		}
+
+
+		function startNoiseLoop(){
+
+			setInterval(redraw,1000/60);
+
+
+		}
+
+		// UPDATE THE PATH POINTS TO MATCH THE HANDLE POSITIONS
+
+		function updatePath()
+		{
+			var i = 0;
+			var c, s;
+			while(i < circles.length){
+				c = circles[i];
+				right = path.segments[c.pathRightId];
+				left = path.segments[c.pathLeftId];
+
+				right.anchor = {x: c.position.x, y: c.position.y };
+
+				left.anchor = {x: centerX - (right.point.x - centerX), y: right.point.y };
+
+				i++;
+			}
+			// path.smooth();
+		}
+
+		// ADD MOUSE EVENTS TO THE HANDLES
+
+		function addMouseEvents(obj){
+			obj.on({
+				mousedown: function(event) {
+					mouseIsDown = true;
+				},
+				mouseup: function(event) {
+					mouseIsDown = false;
+				},
+				mousedrag: function(event) {
+					this.position += event.delta;
+					updatePath();
+				},
+				mouseenter: function(event) {
+					this.opacity = handleOverOpacity;
+				},
+				mouseleave: function(event) {
+					this.opacity = handleDimOpacity;
+				}
+			});
+		}
+
+
+	</script>
+</head>
+<body style="background-color: black;">
+	<canvas id="canvas" resize></canvas>
+</body>
+</html>

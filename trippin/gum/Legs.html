@@ -1,0 +1,35 @@
+<!--
+
+This is an ongoing experiment with Marcin Ignac.
+It is written in coffeescript, so it has a bit of a learning curve. See the files in the 'src_legs' folder for details.
+
+-->
+
+<!DOCTYPE html>  
+<html lang="en">
+	<head>
+		<title>Legs</title>
+		<meta charset="utf-8">
+		<!-- <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale = 1.0,maximum-scale = 1.0" /> -->
+		<link rel="stylesheet" href="css/style.css"/>
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<script src="js/paper-full.js"></script>
+		<script src="js/dat.gui.min.js"></script>
+		<script src="js/legs.js"></script>
+
+	</head>
+	<body>
+
+		<div id="container" class="container"></div>
+		<textarea id="debugTxt"></textarea>
+		
+		<script type="text/javascript">
+
+			$(document).ready(function(){
+				var main = new SkeletonScene();
+			});
+
+		</script>
+
+	</body>
+</html>

@@ -3,18 +3,18 @@ var myCanvas = document.getElementById("myCanvas");
 
 var detectPoints = new DetectPoints(debugCanvas);
 var drawPoints = new DrawPoints(myCanvas);
-var cornerDetect = new CornerDetect(debugCanvas);
+//var cornerDetect = new CornerDetect(debugCanvas);
 
 function setup() {
 		detectPoints.init();
-		cornerDetect.init();
+		//cornerDetect.init();
 }
 
 function update() {
 		detectPoints.draw();
 		drawPoints.getPoints(detectPoints.points, detectPoints.width, detectPoints.height);
 		drawPoints.draw();
-		cornerDetect.tick();
+		//cornerDetect.tick();
 }
 
 function loop(callback) {

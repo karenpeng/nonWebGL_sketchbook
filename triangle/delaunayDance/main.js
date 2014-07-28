@@ -16,6 +16,7 @@ function update() {
 		detectPoints.draw();
 		drawPoints.getPoints(detectPoints.points, detectPoints.width, detectPoints.height);
 		drawPoints.draw();
+
 		data.getPoints(drawPoints.points);
 		data.getAvg();
 

@@ -53,10 +53,10 @@
 												index]);
 										if (colorDifference > this.colorDiffShrehold) {
 
-												rawPoints.push([i, j, true]);
+												rawPoints.push([true, i, j]);
 
 										}else{
-											rawPoints.push([i, j, false]);
+											rawPoints.push([false]);
 										}
 										this.previousColor[index] = this.currentColor[index];
 										index++;
@@ -69,9 +69,9 @@
 						var widthAmount = this.width/this.sampleRate;
 
 							for(k=widthAmount; k<rawPoints.length- widthAmount-1; k++){
-								if(rawPoints[k][2]){							
-									if(!rawPoints[k-1][2] || !rawPoints[k-1][2] || !rawPoints[k-widthAmount][2] || !rawPoints[k+widthAmount][2]){
-										this.points.push(new Point(rawPoints[k][0], rawPoints[k][1], "#ff00ff"));
+								if(rawPoints[k][0]){							
+									if(!rawPoints[k-1][0] || !rawPoints[k-1][0] || !rawPoints[k-widthAmount][0] || !rawPoints[k+widthAmount][0]){
+										this.points.push(new Point(rawPoints[k][1], rawPoints[k][2], "#ff00ff"));
 									}
 								}
 							}

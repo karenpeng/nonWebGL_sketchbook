@@ -1,6 +1,6 @@
   var canvas = document.getElementById("triangleTest");
   var context = canvas.getContext("2d");
-  var main = new Main(DelaunayAnimation);
+  var main = new Main(SAnimation);
   /*
   //first attempt
   var d = new DelaunayAnimation(canvas);
@@ -21,7 +21,7 @@
   update(d.draw);
 */
 function drawBackground(){
-  context.fillStyle = "black";
+  context.fillStyle = "#00a9ef";
   context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -44,6 +44,9 @@ function changeType(type){
     } else if (value === "DelaunayAvoid") {
       drawBackground();
       changeType(DelaunayAvoid);
+    }else if(value === "SamsungAnimation"){
+      drawBackground();
+      changeType(SAnimation);
     }
   });
 
@@ -83,7 +86,24 @@ function changeType(type){
     }
   };
 
+  canvas.onmouseenter = function (e) {
+    //console.log(main.animation.mouseOverEvent)
+    if (main.animation.mouseEnterEvent !== undefined) {
+         // console.log("over")
+      main.animation.mouseEnterEvent(e.pageX, e.pageY);
+    }
+  };
+
+  canvas.onmouseleave = function (e) {
+    //console.log(main.animation.mouseOverEvent)
+    if (main.animation.mouseLeaveEvent !== undefined) {
+         // console.log("over")
+      main.animation.mouseLeaveEvent(e.pageX, e.pageY);
+    }
+  };
+
   canvas.onmousedown = function (e) {
+    //console.log(main.animation.mouseDownEvent)
     if (main.animation.mouseDownEvent !== undefined) {
       main.animation.mouseDownEvent(e.pageX, e.pageY);
     }

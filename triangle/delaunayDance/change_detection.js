@@ -137,7 +137,7 @@
 
 										}
 								}
-								console.log(afterX.length, afterY.length, this.points.length)
+								//console.log(afterX.length, afterY.length, this.points.length)
 						}
 				}
 
@@ -147,7 +147,7 @@
 										this.points.splice(k, 1);
 										//vertices.splice(k, 1);
 								} else {
-										this.points[k].render(this.can, 4);
+										this.points[k].render(this.can, 2);
 								}
 						}
 
@@ -157,7 +157,7 @@
 		function Point(x, y, fillStyle) {
 				this.x = x;
 				this.y = y;
-				this.life = 240;
+				this.life = 60;
 				this.fillStyle = fillStyle;
 		}
 		Point.prototype.update = function () {

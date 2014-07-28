@@ -16,3 +16,15 @@
 			// Draw the view now:
 			paper.view.draw();
 	}
+
+	function hell() {
+			//this is about making a path
+	}
+
+	function whatever() {
+			//this is about getting value from the path
+	}
+
+	function hookup() {
+			//this is about hookup to control animations
+	}

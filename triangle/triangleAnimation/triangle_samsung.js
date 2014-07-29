@@ -49,16 +49,16 @@
 
 		//group2
 		for(i = 0; i< 10; i ++){
-			var x = Math.floor(Math.random()*this.width/3);
-			var y = Math.floor(Math.random()*this.height*2/3 + this.height/3);
+			var x = Math.floor(Math.random()*this.width/4);
+			var y = Math.floor(Math.random()*this.height/2 + this.height/2);
 			this.vehicles2.push(new Vehicle(new PVector(x,y), 8, 0.8, this.canvas));
 			this.vertices2.push([x,y]);
 		}
 		//the static points
-		for(it=-100; it<this.width/3-100; it+= 100){
+		for(it=-100; it<this.width/4-100; it+= 100){
 			this.vertices2.push([it, this.height +100]);
 		}
-		for(it = this.height*2/3+30; it<this.height+100; it+=200){
+		for(it = this.height/2+30; it<this.height+100; it+=200){
 			this.vertices2.push([-100, it]);
 		}
 
@@ -96,7 +96,7 @@
 	        this.vehicles2[j].applyForce(seekForce);
 	      }
 	        this.vehicles2[j].update();
-	        this.vehicles2[j].borders(-100, this.width/3-30, this.height/3, this.height+100);
+	        this.vehicles2[j].borders(-100, this.width/4-30, this.height/2, this.height+100);
     	//}
 
       this.vertices2[j] = [this.vehicles2[j].loc.x, this.vehicles2[j].loc.y];

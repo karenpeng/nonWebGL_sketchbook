@@ -86,6 +86,13 @@
     }
   };
 
+  canvas.onmouseover = function (e) {
+    //console.log(main.animation.mouseDownEvent)
+    if (main.animation.mouseOverEvent !== undefined) {
+      main.animation.mouseOverEvent(e.pageX, e.pageY);
+    }
+  };
+
   canvas.onmouseenter = function (e) {
     //console.log(main.animation.mouseOverEvent)
     if (main.animation.mouseEnterEvent !== undefined) {

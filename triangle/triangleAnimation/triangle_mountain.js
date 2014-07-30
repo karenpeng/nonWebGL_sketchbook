@@ -156,19 +156,21 @@
     
   };
 
-  var addCount = 0;
+  var preMouse = [0,0];
+
   SAnimation.prototype.mouseEnterEvent = function(x, y){
-    addCount = 0;
+    preMouse = [0,0];
   }
 
   SAnimation.prototype.mouseMoveEvent = function (x, y) {
-     addCount++;
-    if(addCount % 6 === 0){
+
+    if(Math.abs(x - preMouse[0]) > 30 || Math.abs(y - preMouse[1]) > 30){
       if(x > this.width / 3 + 20 && this.vertexes1.length < 48){
         this.vertexes1.push(new Vertex(x + Math.random()*4 -2, y+ Math.random()*4 -2, true));
       }else if(x < this.width / 6 && y > this.height / 2 && this.vertexes2.length < 18){
         this.vertexes2.push(new Vertex(x+ Math.random()*4 -2, y+ Math.random()*4 -2, true));
-      }           
+      }        
+    preMouse = [x ,y];   
     }
   };
 

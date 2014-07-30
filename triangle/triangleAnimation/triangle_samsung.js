@@ -50,7 +50,7 @@
 
     //moving points
     for (var i = 0; i < 10; i++) {
-      var x = Math.floor(Math.random() * this.width * 2 / 3 + this.width / 3 + 10);
+      var x = Math.floor(Math.random() * this.width * 2 / 3 + this.width / 3 + 30);
       var y = Math.floor(Math.random() * this.height - 10);
       this.vertexes1.push(new Vertex(x, y, true));
     }
@@ -114,8 +114,8 @@
     for (var i = this.triangles1.length; i >= 3; i -= 3) {
 
       this.context.fillStyle = 'rgb(0,' + Math.floor(
-        180 - k * 12) + ',' +
-        Math.floor(240 - k * 6) + ')';
+        140 - k * 6) + ',' +
+        Math.floor(220 - k * 3) + ')';
 
       this.context.strokeStyle = this.context.fillStyle;
       this.context.beginPath();
@@ -136,8 +136,8 @@
     for (i = this.triangles2.length; i >= 3; i -= 3) {
 
       this.context.fillStyle = 'rgb(0,' + Math.floor(
-        k * 4 + 100) + ',' +
-        Math.floor(k * 7 + 200) + ')';
+        k * 4 + 140) + ',' +
+        Math.floor(k * 8 + 220) + ')';
 
       this.context.strokeStyle = this.context.fillStyle;
       this.context.beginPath();

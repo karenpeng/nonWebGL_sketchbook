@@ -21,7 +21,7 @@
   update(d.draw);
 */
   function drawBackground() {
-    context.fillStyle = "#00a9ef";
+    context.fillStyle = "#0099ef";
     context.fillRect(0, 0, canvas.width, canvas.height);
   }
 

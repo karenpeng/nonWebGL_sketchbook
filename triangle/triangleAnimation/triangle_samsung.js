@@ -75,7 +75,7 @@
 
 
     //moving points
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 5; i++) {
       var x = Math.floor(Math.random() * this.width / 6);
       var y = Math.floor(Math.random() * this.height / 2 + this.height / 2);
       this.vertexes2.push(new Vertex(x, y, true));
@@ -86,7 +86,7 @@
 
   SAnimation.prototype.draw = function () {
 
-    //this.vertexes1 = [];
+    //globalCompositeOperation  = 'lighter';
     for (var j = 0; j < this.vertexes1.length; j++) {    
       this.vertexes1[j].update(this.width / 3 + 10, this.width, 0, this.height);
     }
@@ -136,8 +136,8 @@
     for (i = this.triangles2.length; i >= 3; i -= 3) {
 
       this.context.fillStyle = 'rgb(0,' + Math.floor(
-        k * 6 + 100) + ',' +
-        Math.floor(k * 8 + 200) + ')';
+        k * 4 + 100) + ',' +
+        Math.floor(k * 7 + 200) + ')';
 
       this.context.strokeStyle = this.context.fillStyle;
       this.context.beginPath();

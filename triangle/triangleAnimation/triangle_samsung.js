@@ -27,7 +27,7 @@
 
     //initiate two groupps
     //group1
-    for (var i = 0; i < 16; i++) {
+    for (var i = 0; i < 24; i++) {
       var x = Math.floor(Math.random() * this.width * 2 / 3 + this.width / 3);
       var y = Math.floor(Math.random() * this.height - 10);
       this.vehicles1.push(new Vehicle(new PVector(x, y), 8, 0.8, this.canvas));
@@ -41,8 +41,6 @@
     for (it = -10; it < this.height + 10; it += 60) {
       this.vertices1.push([this.width + 10, it]);
     }
-    // this.vertices1.push([this.width / 3, this.height * 3 / 4]);
-    //this.vertices1.push([this.width / 3 + 100, this.height / 3]);
     this.vertices1.push([this.width * 7 / 24, this.height + 10]);
 
     //group2
@@ -68,18 +66,15 @@
   SAnimation.prototype.draw = function () {
 
     for (var j = 0; j < this.vehicles1.length; j++) {
-      //if(this.vertices1[j].status === "dynamic"){
       if (isMouseMove) {
         this.vehicles1[j].sepDist = constrain(this.vehicles1[j].sepDist, 25,
           100);
         var seekForce = this.vehicles1[j].seek();
-        seekForce.mult(1.5);
+        //seekForce.mult(4.5);
         this.vehicles1[j].applyForce(seekForce);
       }
       this.vehicles1[j].update();
-      this.vehicles1[j].borders(this.width / 3, this.width, 0,
-        this.height);
-      //}
+      this.vehicles1[j].borders(this.width / 3, this.width, 0, this.height);
 
       this.vertices1[j] = [this.vehicles1[j].loc.x, this.vehicles1[j].loc.y];
     }
@@ -87,19 +82,18 @@
     this.triangles1 = Delaunay.triangulate(this.vertices1);
 
     for (j = 0; j < this.vehicles2.length; j++) {
-      //if(this.vertices1[j].status === "dynamic"){
+
       if (isMouseMove) {
         this.vehicles2[j].sepDist = constrain(this.vehicles2[j].sepDist, 25,
           100);
-        //this.vehicles[j].applyBehaviors();
+
         var seekForce = this.vehicles2[j].seek();
-        seekForce.mult(1.5);
+        //seekForce.mult(1.5);
         this.vehicles2[j].applyForce(seekForce);
       }
       this.vehicles2[j].update();
       this.vehicles2[j].borders(0, this.width / 6, this.height / 2,
         this.height);
-      //}
 
       this.vertices2[j] = [this.vehicles2[j].loc.x, this.vehicles2[j].loc.y];
     }
@@ -108,18 +102,11 @@
 
     var k = 0;
     for (var i = this.triangles1.length; i >= 3; i -= 3) {
-      // if(k % 2 === 0){
-      // this.context.fillStyle = 'rgb(250,'+ Math.floor(250 - k * 4) + ',' +
-      // Math.floor(250 - k * 2)+ ')';
-      // }else{
-      // this.context.fillStyle = 'rgb(0,' + Math.floor(
-      //   200 - k * 6) + ',' +
-      //   Math.floor(250 - k * 3) + ')';
+
       this.context.fillStyle = 'rgb(0,' + Math.floor(
         180 - k * 8) + ',' +
         Math.floor(240 - k * 5) + ')';
-      //}
-      //console.log(this.context.fillStyle);
+
       this.context.strokeStyle = this.context.fillStyle;
       this.context.beginPath();
       this.context.moveTo(this.vertices1[this.triangles1[i - 1]][0], this.vertices1[
@@ -137,15 +124,11 @@
 
     k = 0;
     for (i = this.triangles2.length; i >= 3; i -= 3) {
-      // if(k % 2 === 0){
-      // this.context.fillStyle = 'rgb(250,'+ Math.floor(250 - k * 4) + ',' +
-      // Math.floor(250 - k * 2)+ ')';
-      // }else{
+
       this.context.fillStyle = 'rgb(0,' + Math.floor(
         k * 12 + 24) + ',' +
         Math.floor(k * 20 + 60) + ')';
-      //}
-      //console.log(this.context.fillStyle);
+
       this.context.strokeStyle = this.context.fillStyle;
       this.context.beginPath();
       this.context.moveTo(this.vertices2[this.triangles2[i - 1]][0], this.vertices2[
@@ -160,9 +143,6 @@
       k += 0.6;
 
     }
-
-    //console.log(this.vehicles1[1].target.x-this.vehicles1[1].loc.x);
-    //console.log(this.vehicles1[2].vel.x, this.vehicles1[2].vel.y)
 
   };
 
@@ -180,7 +160,6 @@
 
   SAnimation.prototype.mouseLeaveEvent = function (x, y) {
     isMouseMove = false;
-    //console.log(isMouseMove);
   };
 
   SAnimation.prototype.mouseMoveEvent = function (x, y) {
@@ -188,14 +167,12 @@
       var sepForce = v.separate(x, y);
       sepForce.mult(2);
       v.applyForce(sepForce);
-      //v.target = new PVector(x, y);
     })
 
     this.vehicles2.forEach(function (vv) {
       var sepForce = vv.separate(x, y);
       sepForce.mult(2);
       vv.applyForce(sepForce);
-      //vv.target = new PVector(x, y);
     })
   };
 
@@ -215,17 +192,15 @@
 
   Vehicle.prototype.update = function () {
     if (isMouseMove) {
-      this.vel.mult(0);
+      //this.vel.mult(0);
     } else {
       this.target = new PVector(this.loc.x, this.loc.y)
       this.vel = this.preVel !== undefined ? this.preVel : this.vel;
-      //if(this.preVel !== undefined) console.log(this.preVel)
     }
     this.vel.add(this.acc);
     this.vel.limit(this.maxSpeed);
     this.loc.add(this.vel);
     this.acc.mult(0);
-    //this.borders();
   };
 
   Vehicle.prototype.applyForce = function (f) {
@@ -271,7 +246,6 @@
   Vehicle.prototype.separate = function (x, y) {
     var dd = PVector.sub(this.loc, new PVector(x, y));
     var d = dd.mag();
-    //console.log(d);
     if (d < this.sepDist) {
       var diff = PVector.sub(this.loc, new PVector(x, y));
       diff.normalize();

@@ -40,7 +40,6 @@
     }
 
     for (var j = 17; j < this.vertices.length; j++) {
-      //vehicles.push( new Vehicle( new p5.Vector(random(width), random(height)), 8, 0.9, new p5.Vector(x, y) ) );
       var x = Math.floor(Math.random() * this.canvas.width);
       var y = Math.floor(Math.random() * this.canvas.height);
       this.vertices[j] = [x, y];

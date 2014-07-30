@@ -14,106 +14,125 @@
     this.context = this.canvas.getContext("2d");
     this.height = this.canvas.height;
     this.width = this.canvas.width;
-    this.vehicles1 = [];
-    this.vehicles2 = [];
+    this.vertexes1 = [];
+    this.vertexes2 = [];
     this.triangles1;
     this.triangles2;
-    this.vertices1 = [];
-    this.vertices2 = [];
-
   }
 
   SAnimation.prototype.init = function () {
 
     //initiate two groupps
     //group1
-    for (var i = 0; i < 24; i++) {
-      var x = Math.floor(Math.random() * this.width * 2 / 3 + this.width / 3);
+    /*
+      
+          .
+    */
+    this.vertexes1.push(new Vertex(this.width / 3, this.height + 40, false));
+    /*
+        .
+      .
+    */
+    this.vertexes1.push(new Vertex(this.width / 3 + 20, this.height /2, false));
+    this.vertexes1.push(new Vertex(this.width / 3 + 100, this.height / 3, false));
+
+    /*
+                 ========
+
+                 ========
+    */
+    for (var it = this.width / 3 + 200; it < this.width + 10; it += 200) {
+      this.vertexes1.push(new Vertex(it, 0, false));
+      this.vertexes1.push(new Vertex(it, this.height, false));
+    }
+    this.vertexes1.push(new Vertex(this.width + 40, this.height + 10, false));
+
+    /*
+                          |
+                          |
+                          |
+    */
+
+    for (it = -10; it < this.height + 10; it += 200) {
+      this.vertexes1.push(new Vertex(this.width, it, false));
+    }
+
+    //moving points
+    for (var i = 0; i < 8; i++) {
+      var x = Math.floor(Math.random() * this.width * 2 / 3 + this.width / 3 + 10);
       var y = Math.floor(Math.random() * this.height - 10);
-      this.vehicles1.push(new Vehicle(new PVector(x, y), 8, 0.8, this.canvas));
-      this.vertices1.push([x, y]);
+      this.vertexes1.push(new Vertex(x, y, true));
     }
-    //the static points
-    for (var it = this.width / 3 + 100; it < this.width + 10; it += 100) {
-      this.vertices1.push([it, -10]);
-      this.vertices1.push([it, this.height + 10]);
-    }
-    for (it = -10; it < this.height + 10; it += 60) {
-      this.vertices1.push([this.width + 10, it]);
-    }
-    this.vertices1.push([this.width * 7 / 24, this.height + 10]);
+
 
     //group2
-    for (i = 0; i < 8; i++) {
+    //the static points
+    /*
+
+    =     =
+    */
+    this.vertexes2.push(new Vertex(0, this.height, false));
+    this.vertexes2.push(new Vertex(this.width / 6, this.height, false));
+
+    /*
+
+    .
+ 
+    */
+    this.vertexes2.push(new Vertex(0, this.height * 5 / 8, false));
+    this.vertexes2.push(new Vertex(this.width / 8, this.height *2/ 3, false));
+
+
+    //moving points
+    for (i = 0; i < 3; i++) {
       var x = Math.floor(Math.random() * this.width / 6);
       var y = Math.floor(Math.random() * this.height / 2 + this.height / 2);
-      this.vehicles2.push(new Vehicle(new PVector(x, y), 8, 0.8, this.canvas));
-      this.vertices2.push([x, y]);
+      this.vertexes2.push(new Vertex(x, y, true));
     }
-    //the static points
-    for (it = -10; it < this.width / 6; it += 100) {
-      this.vertices2.push([it, this.height + 10]);
-    }
-    for (it = this.height / 2 + 30; it < this.height + 10; it += 100) {
-      this.vertices2.push([-10, it]);
-    }
-    this.vertices2.push([this.width / 6, this.height * 2 / 3]);
 
-    this.triangles1 = Delaunay.triangulate(this.vertices1);
-    this.triangles2 = Delaunay.triangulate(this.vertices2);
   }
+
 
   SAnimation.prototype.draw = function () {
 
-    for (var j = 0; j < this.vehicles1.length; j++) {
-      if (isMouseMove) {
-        this.vehicles1[j].sepDist = constrain(this.vehicles1[j].sepDist, 25,
-          100);
-        var seekForce = this.vehicles1[j].seek();
-        //seekForce.mult(4.5);
-        this.vehicles1[j].applyForce(seekForce);
-      }
-      this.vehicles1[j].update();
-      this.vehicles1[j].borders(this.width / 3, this.width, 0, this.height);
+    //this.vertexes1 = [];
+    for (var j = 0; j < this.vertexes1.length; j++) {    
+      this.vertexes1[j].update(this.width / 3 + 10, this.width, 0, this.height);
+    }
+ 
 
-      this.vertices1[j] = [this.vehicles1[j].loc.x, this.vehicles1[j].loc.y];
+    for (j = 0; j < this.vertexes2.length; j++) {
+      this.vertexes2[j].update(0, this.width / 6, this.height / 2, this.height);
     }
 
-    this.triangles1 = Delaunay.triangulate(this.vertices1);
 
-    for (j = 0; j < this.vehicles2.length; j++) {
+    var vertices1 = [];
+    var vertices2 = [];
+    for(var it = 0; it< this.vertexes1.length; it++ ){
+      vertices1.push([this.vertexes1[it].x, this.vertexes1[it].y]);
 
-      if (isMouseMove) {
-        this.vehicles2[j].sepDist = constrain(this.vehicles2[j].sepDist, 25,
-          100);
-
-        var seekForce = this.vehicles2[j].seek();
-        //seekForce.mult(1.5);
-        this.vehicles2[j].applyForce(seekForce);
-      }
-      this.vehicles2[j].update();
-      this.vehicles2[j].borders(0, this.width / 6, this.height / 2,
-        this.height);
-
-      this.vertices2[j] = [this.vehicles2[j].loc.x, this.vehicles2[j].loc.y];
+    }
+    for(it = 0; it< this.vertexes2.length; it++ ){
+      vertices2.push([this.vertexes2[it].x, this.vertexes2[it].y]);
     }
 
-    this.triangles2 = Delaunay.triangulate(this.vertices2);
+    this.triangles1 = Delaunay.triangulate(vertices1);
+    this.triangles2 = Delaunay.triangulate(vertices2);
 
     var k = 0;
     for (var i = this.triangles1.length; i >= 3; i -= 3) {
 
       this.context.fillStyle = 'rgb(0,' + Math.floor(
-        180 - k * 8) + ',' +
-        Math.floor(240 - k * 5) + ')';
+        180 - k * 12) + ',' +
+        Math.floor(240 - k * 6) + ')';
 
       this.context.strokeStyle = this.context.fillStyle;
       this.context.beginPath();
-      this.context.moveTo(this.vertices1[this.triangles1[i - 1]][0], this.vertices1[
+      this.context.moveTo(vertices1[this.triangles1[i - 1]][0], vertices1[
         this.triangles1[i - 1]][1]);
-      this.context.lineTo(this.vertices1[this.triangles1[i - 2]][0], this.vertices1[
+      this.context.lineTo(vertices1[this.triangles1[i - 2]][0], vertices1[
         this.triangles1[i - 2]][1]);
-      this.context.lineTo(this.vertices1[this.triangles1[i - 3]][0], this.vertices1[
+      this.context.lineTo(vertices1[this.triangles1[i - 3]][0], vertices1[
         this.triangles1[i - 3]][1]);
       this.context.closePath();
       this.context.stroke();
@@ -126,16 +145,16 @@
     for (i = this.triangles2.length; i >= 3; i -= 3) {
 
       this.context.fillStyle = 'rgb(0,' + Math.floor(
-        k * 12 + 24) + ',' +
-        Math.floor(k * 20 + 60) + ')';
+        k * 6 + 100) + ',' +
+        Math.floor(k * 8 + 200) + ')';
 
       this.context.strokeStyle = this.context.fillStyle;
       this.context.beginPath();
-      this.context.moveTo(this.vertices2[this.triangles2[i - 1]][0], this.vertices2[
+      this.context.moveTo(vertices2[this.triangles2[i - 1]][0], vertices2[
         this.triangles2[i - 1]][1]);
-      this.context.lineTo(this.vertices2[this.triangles2[i - 2]][0], this.vertices2[
+      this.context.lineTo(vertices2[this.triangles2[i - 2]][0], vertices2[
         this.triangles2[i - 2]][1]);
-      this.context.lineTo(this.vertices2[this.triangles2[i - 3]][0], this.vertices2[
+      this.context.lineTo(vertices2[this.triangles2[i - 3]][0], vertices2[
         this.triangles2[i - 3]][1]);
       this.context.closePath();
       this.context.stroke();
@@ -143,133 +162,43 @@
       k += 0.6;
 
     }
-
+    
   };
 
-  SAnimation.prototype.mouseEnterEvent = function (x, y) {
-    isMouseMove = true;
-    console.log(isMouseMove);
-    this.vehicles1.forEach(function (v) {
-      v.recordLocation();
-    })
-
-    this.vehicles2.forEach(function (vv) {
-      vv.recordLocation();
-    })
-  };
-
-  SAnimation.prototype.mouseLeaveEvent = function (x, y) {
-    isMouseMove = false;
-  };
+  var addCount = 0;
+  SAnimation.prototype.mouseEnterEvent = function(x, y){
+    addCount = 0;
+  }
 
   SAnimation.prototype.mouseMoveEvent = function (x, y) {
-    this.vehicles1.forEach(function (v) {
-      var sepForce = v.separate(x, y);
-      sepForce.mult(2);
-      v.applyForce(sepForce);
-    })
-
-    this.vehicles2.forEach(function (vv) {
-      var sepForce = vv.separate(x, y);
-      sepForce.mult(2);
-      vv.applyForce(sepForce);
-    })
+     addCount++;
+    if(addCount % 6 === 0){
+      if(x > this.width / 3 && this.vertexes1.length < 48){
+        this.vertexes1.push(new Vertex(x + Math.random()*4 -2, y+ Math.random()*4 -2, true));
+      }else if(x < this.width / 6 && y > this.height / 2 && this.vertexes2.length < 18){
+        this.vertexes2.push(new Vertex(x+ Math.random()*4 -2, y+ Math.random()*4 -2, true));
+      }           
+    }
   };
 
-  function Vehicle(l, ms, mf, can, status) {
-    this.loc = new PVector(l.x, l.y);
-    this.vel = new PVector(Math.random() * 0.2 - 0.1,
-      Math.random() * 0.2 - 0.1);
-    this.acc = new PVector(0, 0);
-    this.maxSpeed = ms;
-    this.maxForce = mf;
-    this.r = 5;
-    this.sepDist = 100;
-    this.can = can;
+  
+  function Vertex(x, y, status) {
+    this.x = x;
+    this.y = y;
+    this.vX = Math.random() * 0.2 - 0.1;
+    this.vY = Math.random() * 0.2 - 0.1;
     this.status = status;
-    this.target = this.loc;
   }
 
-  Vehicle.prototype.update = function () {
-    if (isMouseMove) {
-      //this.vel.mult(0);
-    } else {
-      this.target = new PVector(this.loc.x, this.loc.y)
-      this.vel = this.preVel !== undefined ? this.preVel : this.vel;
+  Vertex.prototype.update = function (minX, maxX, minY, maxY) {
+    if(this.status){
+      this.x += this.vX;
+      this.y += this.vY;
+      if (this.x < minX || this.x > maxX) this.vX *= -1;
+      if (this.y < minY || this.y > maxY) this.vY *= -1;
     }
-    this.vel.add(this.acc);
-    this.vel.limit(this.maxSpeed);
-    this.loc.add(this.vel);
-    this.acc.mult(0);
   };
-
-  Vehicle.prototype.applyForce = function (f) {
-    this.acc.add(f);
-  };
-
-  Vehicle.prototype.recordLocation = function () {
-    this.target = this.loc;
-    this.preVel = new PVector(this.vel.x, this.vel.y);
-  };
-
-  Vehicle.prototype.borders = function (xMin, xMax, yMin, yMax) {
-    if (this.loc.x < xMin || this.loc.x > xMax) this.vel.x *= -1;
-    if (this.loc.y < yMin || this.loc.y > yMax) this.vel.y *= -1;
-  };
-
-  Vehicle.prototype.applyBehaviors = function () {
-    var sepForce = this.separate();
-    var seekForce = this.seek();
-    sepForce.mult(2);
-    seekForce.mult(1);
-    this.applyForce(sepForce);
-    this.applyForce(seekForce);
-  };
-
-  Vehicle.prototype.seek = function () {
-    var desire = PVector.sub(this.target, this.loc);
-    var d = desire.mag();
-
-    if (d < 100) {
-      var m = map(d, 0, 100, 0, this.maxSpeed);
-      desire.normalize();
-      desire.mult(m);
-    } else {
-      desire.normalize();
-      desire.mult(this.maxSpeed);
-    }
-    var steer = PVector.sub(desire, this.vel);
-    steer.limit(this.maxForce);
-    return steer;
-  };
-
-  Vehicle.prototype.separate = function (x, y) {
-    var dd = PVector.sub(this.loc, new PVector(x, y));
-    var d = dd.mag();
-    if (d < this.sepDist) {
-      var diff = PVector.sub(this.loc, new PVector(x, y));
-      diff.normalize();
-      diff.mult(this.maxSpeed);
-      diff.mult(this.sepDist / d);
-
-      var steer = PVector.sub(diff, this.vel);
-      steer.limit(this.maxForce);
-      return steer;
-    } else {
-      return new PVector(0, 0);
-    }
-  }
-
-  Vehicle.prototype.getDis = function () {
-    var dis = dist(this.loc.x, this.loc.y, this.target.x, this.target.y);
-    return dis;
-  }
-
-  Vehicle.prototype.render = function () {
-    var ctx = this.can.getContext("2d");
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(this.loc.x, this.loc.y, 2, 2);
-  }
+ 
 
   exports.SAnimation = SAnimation;
 

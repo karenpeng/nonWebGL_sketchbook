@@ -87,7 +87,7 @@
   SAnimation.prototype.draw = function () {
 
     for (var j = 0; j < this.vertexes1.length; j++) {    
-      this.vertexes1[j].update(this.width / 3 + 10, this.width, 10, this.height - 20);
+      this.vertexes1[j].update(this.width / 3 + 10, this.width, 30, this.height - 10);
     }
  
 
@@ -165,7 +165,11 @@
 
     if(Math.abs(x - preMouse[0]) > 30 || Math.abs(y - preMouse[1]) > 30){
       if(x > this.width / 3 + 20 && this.vertexes1.length < 48){
+        if(x < this.width / 3 + 100 && y < this.height / 2){
+          //do nothing
+        }else{
         this.vertexes1.push(new Vertex(x + Math.random()*4 -2, y+ Math.random()*4 -2, true));
+        }
       }else if(x < this.width / 6 && y > this.height / 2 && this.vertexes2.length < 18){
         this.vertexes2.push(new Vertex(x+ Math.random()*4 -2, y+ Math.random()*4 -2, true));
       }        

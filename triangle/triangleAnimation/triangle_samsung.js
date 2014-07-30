@@ -1,13 +1,4 @@
 (function (exports) {
-  var colors = [
-    "#1428a0",
-    "#0057b8",
-    "#00a9e0",
-    "#008ca6",
-    "#56b1aa"
-  ]
-
-  var isMouseMove = false;
 
   function SAnimation(can) {
     this.canvas = can;
@@ -58,7 +49,7 @@
     }
 
     //moving points
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < 10; i++) {
       var x = Math.floor(Math.random() * this.width * 2 / 3 + this.width / 3 + 10);
       var y = Math.floor(Math.random() * this.height - 10);
       this.vertexes1.push(new Vertex(x, y, true));

@@ -114,8 +114,8 @@
     for (var i = this.triangles1.length; i >= 3; i -= 3) {
 
       this.context.fillStyle = 'rgb(0,' + Math.floor(
-        140 - k * 6) + ',' +
-        Math.floor(220 - k * 3) + ')';
+        130 - k * 6) + ',' +
+        Math.floor(230 - k * 3) + ')';
 
       this.context.strokeStyle = this.context.fillStyle;
       this.context.beginPath();
@@ -164,7 +164,7 @@
   SAnimation.prototype.mouseMoveEvent = function (x, y) {
      addCount++;
     if(addCount % 6 === 0){
-      if(x > this.width / 3 && this.vertexes1.length < 48){
+      if(x > this.width / 3 + 20 && this.vertexes1.length < 48){
         this.vertexes1.push(new Vertex(x + Math.random()*4 -2, y+ Math.random()*4 -2, true));
       }else if(x < this.width / 6 && y > this.height / 2 && this.vertexes2.length < 18){
         this.vertexes2.push(new Vertex(x+ Math.random()*4 -2, y+ Math.random()*4 -2, true));

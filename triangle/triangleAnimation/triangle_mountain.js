@@ -51,7 +51,7 @@
     //moving points
     for (var i = 0; i < 10; i++) {
       var x = Math.floor(Math.random() * this.width * 2 / 3 + this.width / 3 + 30);
-      var y = Math.floor(Math.random() * this.height - 10);
+      var y = Math.floor(Math.random() * (this.height - 30) + 30);
       this.vertexes1.push(new Vertex(x, y, true));
     }
 

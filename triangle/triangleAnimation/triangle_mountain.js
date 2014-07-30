@@ -86,14 +86,13 @@
 
   SAnimation.prototype.draw = function () {
 
-    //globalCompositeOperation  = 'lighter';
     for (var j = 0; j < this.vertexes1.length; j++) {    
-      this.vertexes1[j].update(this.width / 3 + 10, this.width, 0, this.height);
+      this.vertexes1[j].update(this.width / 3 + 10, this.width, 10, this.height - 20);
     }
  
 
     for (j = 0; j < this.vertexes2.length; j++) {
-      this.vertexes2[j].update(0, this.width / 6, this.height / 2, this.height);
+      this.vertexes2[j].update(10, this.width / 6, this.height / 2 + 10, this.height - 10);
     }
 
 

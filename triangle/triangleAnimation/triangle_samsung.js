@@ -36,7 +36,7 @@
     //the static points
     for (var it = this.width / 3 + 100; it < this.width + 10; it += 100) {
       this.vertices1.push([it, -10]);
-      this.vertices1.push([it, this.height + 100]);
+      this.vertices1.push([it, this.height + 10]);
     }
     for (it = -10; it < this.height + 10; it += 60) {
       this.vertices1.push([this.width + 10, it]);
@@ -46,7 +46,7 @@
     this.vertices1.push([this.width * 7 / 24, this.height + 10]);
 
     //group2
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < 8; i++) {
       var x = Math.floor(Math.random() * this.width / 6);
       var y = Math.floor(Math.random() * this.height / 2 + this.height / 2);
       this.vehicles2.push(new Vehicle(new PVector(x, y), 8, 0.8, this.canvas));

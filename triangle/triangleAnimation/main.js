@@ -20,20 +20,20 @@
   setup();
   update(d.draw);
 */
-function drawBackground(){
-  context.fillStyle = "#00a9ef";
-  context.fillRect(0, 0, canvas.width, canvas.height);
-}
+  function drawBackground() {
+    context.fillStyle = "#00a9ef";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  }
 
-function changeType(type){
-  main.destory();
-  main = new Main(type);
-  main.init();
-  main.update();
-}
+  function changeType(type) {
+    main.destory();
+    main = new Main(type);
+    main.init();
+    main.update();
+  }
   //second attempt
   $("#animationType").change(function () {
-    console.log("change")
+    //console.log("change")
     var value = $(this).val();
     if (value === "DelaunayAnimation") {
       drawBackground();
@@ -44,16 +44,16 @@ function changeType(type){
     } else if (value === "DelaunayAvoid") {
       drawBackground();
       changeType(DelaunayAvoid);
-    }else if(value === "SamsungAnimation"){
+    } else if (value === "SamsungAnimation") {
       drawBackground();
       changeType(SAnimation);
     }
   });
 
   function Main(type) {
-    console.log(typeof type)
+    //console.log(typeof type)
     this.animation = new type(canvas);
-    console.log(this.animation);
+    //console.log(this.animation);
     this.keepAnimating = true;
   }
   Main.prototype.init = function () {
@@ -64,7 +64,7 @@ function changeType(type){
   Main.prototype.update = function () {
     var that = this;
     requestAnimationFrame(function () {
-      if(that.keepAnimating){
+      if (that.keepAnimating) {
         that.update();
       }
     });
@@ -72,7 +72,7 @@ function changeType(type){
     this.animation.draw();
     //console.log(this);
   };
-  Main.prototype.destory = function(){
+  Main.prototype.destory = function () {
     this.animation = null;
     this.keepAnimating = false;
   };
@@ -89,7 +89,7 @@ function changeType(type){
   canvas.onmouseenter = function (e) {
     //console.log(main.animation.mouseOverEvent)
     if (main.animation.mouseEnterEvent !== undefined) {
-         // console.log("over")
+      // console.log("over")
       main.animation.mouseEnterEvent(e.pageX, e.pageY);
     }
   };
@@ -97,7 +97,7 @@ function changeType(type){
   canvas.onmouseleave = function (e) {
     //console.log(main.animation.mouseOverEvent)
     if (main.animation.mouseLeaveEvent !== undefined) {
-         // console.log("over")
+      // console.log("over")
       main.animation.mouseLeaveEvent(e.pageX, e.pageY);
     }
   };

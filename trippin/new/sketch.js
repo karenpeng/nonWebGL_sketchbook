@@ -1,47 +1,53 @@
-//paper.install(window);
+paper.install(window);
 
-var canvas, path, tool;
-// tool;
-
-function init() {
-  // Get a reference to the canvas object
-  canvas = document.getElementById('myCanvas');
-  // Create an empty project and a view for the canvas:
-  paper.setup(canvas);
-  // Create a Paper.js Path to draw a line into it:
-  path = new paper.Path();
-  // Give the stroke a color
-
-  tool = new paper.Tool();
-
-  path.strokeColor = 'black';
-
-}
-
-tool.onMouseDown = function (e) {
-  path.add(e.point);
-}
-
-function update() {
-  if (path.segments.length > 0) {
-    path.forEach(function (s) {
-      console.log(s)
-    })
-    // var start = new paper.Point(100, 100);
-    // path.moveTo(start);
-    // // Note that the plus operator on Point objects does not work
-    // // in JavaScript. Instead, we need to call the add() function:
-    // path.lineTo(start.add([200, -50]));
-    // // Draw the view now:
-    // paper.view.draw();
-  }
-}
-
-function createAnimation(callback) {
-  requestAnimationFrame(update);
-  callback();
-}
 window.onload = function () {
-  init();
-  createAnimation(update);
+  var path;
+  var paths = [];
+
+  paper.setup('myCanvas');
+
+  var tool = new Tool();
+
+  tool.onMouseDown = function (e) {
+    if (isDrawingMode) {
+      path = new Path();
+      path.strokeColor = 'black';
+      path.strokeWidth = 15;
+      //path.fullySelected = true;
+    } else {
+
+    }
+  };
+
+  tool.onMouseDrag = function (e) {
+    if (isDrawingMode) {
+      path.add(e.point);
+    } else {
+      if (segment) {
+        e.segment.point += e.delta;
+        e.path.smooth();
+      } else if (e.path) {
+        e.path.position += e.delta;
+      }
+    }
+  };
+
+  tool.onMouseUp = function (e) {
+    if (isDrawingMode) {
+      path.smooth();
+      path.simplify();
+      paths.push(path);
+    }
+  };
+
+  tool.onMouseMove = function (e) {
+    if (isDrawingMode) {
+
+    } else {
+      project.activeLayer.selected = false;
+      if (e.item) {
+        e.item.selected = true;
+      }
+    }
+  }
 }

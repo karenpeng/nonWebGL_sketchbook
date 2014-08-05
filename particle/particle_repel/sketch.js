@@ -170,7 +170,7 @@ FlowField.prototype = {
   }
 };
 
-var debug = true;
+var debug = false;
 var flowField;
 var particles = [];
 var COLOURS = ['#69D2E7', '#A7DBD8', '#E0E4CC', '#F38630', '#FA6900', '#FF4E50',

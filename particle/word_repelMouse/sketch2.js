@@ -1,9 +1,11 @@
 //----------------------------------------- main ---------------------------------------
 var cols, rows, img;
 var vehicles = [];
-var fileName = 'heart2.jpg';
-var resolution = 40;
-var vehicleWidth = 40;
+
+var  fileName = "hearttest.jpg";
+var  resolution = 1;
+var  vehicleWidth = 1;
+
 
 function setup() {
   createCanvas(720, 720);

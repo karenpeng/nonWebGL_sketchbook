@@ -5,6 +5,8 @@ var width = canvas.width;
 var height = canvas.height;
 var maxSpeed = 0.8;
 var maxForce = 0.3;
+var path;
+var loaded = false;
 
 function map(para, orMin, orMax, tarMin, tarMax) {
   var ratio = (para - orMin) / (orMax - orMin);
@@ -183,18 +185,30 @@ function drawBackground() {
   context.fillRect(0, 0, width, height);
 }
 
-function init() {
+function init(paper) {
   flowField = new FlowField(30);
   var j = 0;
-  for (var i = 0; i < 120; i++) {
+  path = new paper.Path();
+  path.strokeColor = {
+    gradient: {
+      stops: ['blue', 'red', 'yellow']
+    },
+    //origin and destination defines the direction of your gradient. In this case its vertical i.e bottom(blue/cooler) to up(red/warmer) refering to link you sent.
+    origin: [0, 0], //gradient will start applying from y=200 towards y=0. Adjust this value to get your desired result
+    destination: [width, 0]
+  };
+  path.strokeWidth = 6;
+  for (var i = 0; i < 10; i++) {
     particles.push(new Particle(Math.random() * width, Math.random() * height,
       COLOURS[j]));
+    path.add(new paper.Point(particles[i].loc.x, particles[i].loc.y));
+    path.smooth();
     j++;
     if (j >= COLOURS.length) j = 0;
   }
 }
 
-function update() {
+function update(paper) {
   context.globalCompositeOperation = 'source-over';
   drawBackground();
   context.globalCompositeOperation = 'lighter';
@@ -207,6 +221,13 @@ function update() {
     p.follow(flowField);
     p.run(context);
   });
+  for(var i = 0; i< particles.length; i++){
+    path.segments[i].point.x = particles[i].loc.x;
+    path.segments[i].point.y = particles[i].loc.y;
+  }
+  //console.log(path.segments[0].point)
+  paper.view.play();
+  //paper.view.update();
 }
 
 function createAnimation(callback) {
@@ -216,8 +237,24 @@ function createAnimation(callback) {
   callback();
 }
 
-init();
-createAnimation(update);
+
+window.onload = function(){
+  loaded = true;
+  paper.setup(canvas);
+  init(paper);
+  createAnimation(function(){
+    update(paper);
+  });
+  //paper.view.play();
+  // paper.view.onFrame = function(e){
+  //   update();
+  // }
+  // for(var i =  
+  // particles.forEach(function(p){
+  //   path.
+  // })
+}
+
 
 window.onkeydown = function (e) {
   e.preventDefault();

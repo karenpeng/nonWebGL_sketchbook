@@ -1,5 +1,6 @@
 paper.install(window);
 
+//making a path
 window.onload = function () {
 
   var path;
@@ -92,5 +93,17 @@ window.onload = function () {
         e.item.selected = true;
       }
     }
-  }
+  };
+//gatting value
+function getValue(pathP){
+  pathP.segments.points.forEach(function(p){
+    //do something;
+  });
 }
+//TODO:
+//add begin and end point
+
+//hooking up for use
+
+};
+

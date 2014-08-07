@@ -3,7 +3,7 @@ var context = canvas.getContext("2d");
 //context.globalCompositeOperation  = 'lighter';
 var width = canvas.width;
 var height = canvas.height;
-var maxSpeed = 0.3;
+var maxSpeed = 0.8;
 var maxForce = 0.3;
 
 function map(para, orMin, orMax, tarMin, tarMax) {
@@ -43,7 +43,7 @@ Particle.prototype = {
     // this.radius = this.oldRadius + map(Math.abs(height / 2 - this.loc.y), 0,
     //   height / 2, 50, 0.1);
     this.radius = this.oldRadius + map(Math.abs(width / 2 - this.loc.x), 0,
-      width / 2, 70, 0.001);
+      width / 2, 50, 0.001);
     // this.radius = this.oldRadius + map(Math.abs(width / 2 - this.loc.x), 0,
     //   width / 2, 0.1, 50);
     this.vel.add(this.acc);
@@ -179,6 +179,7 @@ var COLOURS = ['#69D2E7', '#A7DBD8', '#E0E4CC', '#F38630', '#FA6900', '#FF4E50',
 
 function drawBackground() {
   context.fillStyle = "#2b2b2b";
+  //context.fillStyle = "white";
   context.fillRect(0, 0, width, height);
 }
 

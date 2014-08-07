@@ -32,14 +32,15 @@ window.onload = function () {
       path.strokeWidth = 15;
       //path.fullySelected = true;
     } else {
-      segment = path = null;
+      segment = null;
+      path = null;
       var hitResult = project.hitTest(e.point, hitOptions);
       if(!hitResult) {
         return;
       }
       if(e.modifiers.shift){
         if(hitResult.type === 'segment'){
-          //hitResult.segment.remove();
+          hitResult.segment.remove();
         };
         return;
       }
@@ -64,8 +65,9 @@ window.onload = function () {
     if (isDrawingMode) {
       path.add(e.point);
     } else if (segment) {
-        console.log(segment)
-        segment.point += e.delta;
+        //console.log(segment.point.x+ " with" + e.delta.x)
+        segment.point.x += e.delta.x;
+        segment.point.y += e.delta.y;
         path.smooth();
       } else if (path) {
         console.log(path)
@@ -75,7 +77,6 @@ window.onload = function () {
 
   tool.onMouseUp = function (e) {
     if (isDrawingMode) {
-      path.close = true;
       path.smooth();
       path.simplify();
       paths.push(path);

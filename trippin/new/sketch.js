@@ -36,43 +36,43 @@ window.onload = function () {
       segment = null;
       path = null;
       var hitResult = project.hitTest(e.point, hitOptions);
-      if(!hitResult) {
+      if (!hitResult) {
         return;
       }
-      if(e.modifiers.shift){
-        if(hitResult.type === 'segment'){
+      if (e.modifiers.shift) {
+        if (hitResult.type === 'segment') {
           hitResult.segment.remove();
         };
         return;
       }
-      if(hitResult){
+      if (hitResult) {
         path = hitResult.item;
-        if(hitResult.type === 'segment'){
+        if (hitResult.type === 'segment') {
           segment = hitResult.segment;
-        }else if(hitResult.type === 'stroke'){
+        } else if (hitResult.type === 'stroke') {
           var location = hitResult.location;
           segment = path.insert(location.index + 1, e.point);
           path.smooth();
         }
       }
       movePath = hiteResult.type = 'fill';
-      if(movePath){
+      if (movePath) {
         //project.activeLayer.addChild(hitResult.item);
       }
     }
- };
+  };
 
   tool.onMouseDrag = function (e) {
     if (isDrawingMode) {
       path.add(e.point);
     } else if (segment) {
-        //console.log(segment.point.x+ " with" + e.delta.x)
-        segment.point.x += e.delta.x;
-        segment.point.y += e.delta.y;
-        path.smooth();
-      } else if (path) {
-        console.log(path)
-        path.position += e.delta;
+      //console.log(segment.point.x+ " with" + e.delta.x)
+      segment.point.x += e.delta.x;
+      segment.point.y += e.delta.y;
+      path.smooth();
+    } else if (path) {
+      console.log(path)
+      path.position += e.delta;
     }
   };
 
@@ -94,16 +94,17 @@ window.onload = function () {
       }
     }
   };
-//gatting value
-function getValue(pathP){
-  pathP.segments.points.forEach(function(p){
-    //do something;
-  });
-}
-//TODO:
-//add begin and end point
+  //gatting value
+  function getValue(pathP) {
+    pathP.segments.points.forEach(function (p) {
+      //do something;
+    });
+  }
+  //TODO:
+  //add begin and end point
 
-//hooking up for use
+  //hooking up for use
 
+  //i think it should involves live coding
+  //that is awesome!
 };
-

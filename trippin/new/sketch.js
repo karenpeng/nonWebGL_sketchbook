@@ -12,13 +12,13 @@ window.onload = function () {
   var tool = new Tool();
 
   var segment;
-  var movePath = false;
   var hitOptions = {
     segments: true,
     stroke: true,
     fill: false,
     tolerance: 5
   };
+
   tool.onMouseDown = function (e) {
     if (isDrawingMode) {
       path = new Path();
@@ -26,12 +26,10 @@ window.onload = function () {
         gradient: {
           stops: ['blue', 'red', 'yellow']
         },
-        //origin and destination defines the direction of your gradient. In this case its vertical i.e bottom(blue/cooler) to up(red/warmer) refering to link you sent.
-        origin: [0, 0], //gradient will start applying from y=200 towards y=0. Adjust this value to get your desired result
+        origin: [0, 0],
         destination: [width, 0]
       };
       path.strokeWidth = 15;
-      //path.fullySelected = true;
     } else {
       segment = null;
       path = null;
@@ -54,10 +52,6 @@ window.onload = function () {
           segment = path.insert(location.index + 1, e.point);
           path.smooth();
         }
-      }
-      movePath = hiteResult.type = 'fill';
-      if (movePath) {
-        //project.activeLayer.addChild(hitResult.item);
       }
     }
   };
@@ -94,11 +88,18 @@ window.onload = function () {
       }
     }
   };
+
   //gatting value
   function getValue(pathP) {
-    pathP.segments.points.forEach(function (p) {
-      //do something;
-    });
+    for (var i = 0; i < pathP.curves.length; i++) {
+      var curve = pathP.curves[i];
+      var interval = 5;
+      //console.log(curve.length)
+      for (var j = 1; j <= curve.length; j += interval) {
+        var curvePosition = curve.getLocationAt(j / curve.length);
+        //console.log(curvePosition.point.x, curvePosition.point.y)
+      }
+    }
   }
   //TODO:
   //add begin and end point
@@ -107,4 +108,7 @@ window.onload = function () {
 
   //i think it should involves live coding
   //that is awesome!
+  tool.onKeyDown = function (e) {
+    getValue(path)
+  }
 };

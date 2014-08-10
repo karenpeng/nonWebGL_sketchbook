@@ -102,12 +102,16 @@ window.onload = function () {
     }
   }
   //TODO:
-  //add begin and end point
+  //0.add begin and end point
 
-  //hooking up for use
+  //1.hooking up for use, css3!!!!
 
-  //i think it should involves live coding
-  //that is awesome!
+  //2.browserify!
+
+  //3.i think it should involves live coding, the code control all the canvas
+
+  //4.generative design? Or just a ball?
+
   tool.onKeyDown = function (e) {
     getValue(path)
   }

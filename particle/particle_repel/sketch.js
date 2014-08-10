@@ -45,7 +45,7 @@ Particle.prototype = {
     // this.radius = this.oldRadius + map(Math.abs(height / 2 - this.loc.y), 0,
     //   height / 2, 50, 0.1);
     this.radius = this.oldRadius + map(Math.abs(width / 2 - this.loc.x), 0,
-      width / 2, 50, 0.001);
+      width / 2, 100, 0.001);
     // this.radius = this.oldRadius + map(Math.abs(width / 2 - this.loc.x), 0,
     //   width / 2, 0.1, 50);
     this.vel.add(this.acc);
@@ -125,7 +125,7 @@ function FlowField(r) {
 
 FlowField.prototype = {
   init: function () {
-    this.time += 0.002;
+    this.time += 0.004;
     var perlinNoise = new Perlin();
     var xoff = this.time;
     for (var i = 0; i < this.cols; i++) {
@@ -198,7 +198,7 @@ function init(paper) {
     destination: [width, 0]
   };
   path.strokeWidth = 6;
-  for (var i = 0; i < 10; i++) {
+  for (var i = 0; i < 100; i++) {
     particles.push(new Particle(Math.random() * width, Math.random() * height,
       COLOURS[j]));
     path.add(new paper.Point(particles[i].loc.x, particles[i].loc.y));
@@ -221,12 +221,12 @@ function update(paper) {
     p.follow(flowField);
     p.run(context);
   });
-  for(var i = 0; i< particles.length; i++){
+  for (var i = 0; i < particles.length; i++) {
     path.segments[i].point.x = particles[i].loc.x;
     path.segments[i].point.y = particles[i].loc.y;
   }
   //console.log(path.segments[0].point)
-  paper.view.play();
+  //paper.view.play();
   //paper.view.update();
 }
 
@@ -237,24 +237,22 @@ function createAnimation(callback) {
   callback();
 }
 
-
-window.onload = function(){
+window.onload = function () {
   loaded = true;
   paper.setup(canvas);
   init(paper);
-  createAnimation(function(){
+  createAnimation(function () {
     update(paper);
   });
   //paper.view.play();
   // paper.view.onFrame = function(e){
   //   update();
   // }
-  // for(var i =  
+  // for(var i =
   // particles.forEach(function(p){
   //   path.
   // })
 }
-
 
 window.onkeydown = function (e) {
   e.preventDefault();

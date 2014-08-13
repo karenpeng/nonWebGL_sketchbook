@@ -106,7 +106,7 @@ window.onload = function () {
 
   //1.hooking up for use, css3!!!!
 
-  //2.browserify! T T!!
+  //2.browserify! T T  T T
 
   //3.i think it should involves live coding, the code control all the canvas
 
